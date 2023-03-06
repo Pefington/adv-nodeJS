@@ -422,6 +422,8 @@ video {
 a {
   margin-left: 1rem;
   margin-right: 1rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 *, ::before, ::after {
@@ -522,14 +524,15 @@ a {
   display: flex;
 }
 
-.h-16 {
-  height: 4rem;
+.h-14 {
+  height: 3.5rem;
 }
 
 .items-center {
   align-items: center;
 }
 
-.pl-16 {
-  padding-left: 4rem;
+.bg-yellow-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(250 204 21 / var(--tw-bg-opacity));
 }
