@@ -8,4 +8,15 @@ overrides: []
 parserOptions:
   ecmaVersion: latest
   sourceType: module
-rules: {}
+plugins:
+  - simple-import-sort
+rules:
+  import/extensions: off
+  import/first: error
+  import/newline-after-import: error
+  import/no-duplicates: error
+  import/no-extraneous-dependencies: off
+  no-underscore-dangle: off
+  no-unused-vars: off
+  simple-import-sort/exports: error
+  simple-import-sort/imports: error
