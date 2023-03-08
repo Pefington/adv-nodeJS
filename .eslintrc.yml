@@ -9,6 +9,8 @@ parserOptions:
   ecmaVersion: latest
   sourceType: module
 plugins:
+  - import
+  - node
   - simple-import-sort
 rules:
   import/extensions: off

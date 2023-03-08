@@ -3,12 +3,12 @@ import express from 'express';
 
 import adminRoutes from './routes/admin.js';
 import shopRoutes from './routes/shop.js';
-import sendPage from './utils/sendPage.js';
+import { sendPage } from './utils/sendPage.js';
 
 const app = express();
 
-app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static('public'));
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);

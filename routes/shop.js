@@ -1,11 +1,11 @@
-import express from 'express';
+import express from "express";
 
-import sendPage from '../utils/sendPage.js';
+import { sendPage } from "../utils/sendPage.js";
 
 const router = express.Router();
 
-router.get('/', (_req, res) => {
-  sendPage(res, 'views', 'shop.html');
+router.get("/", (_req, res) => {
+  sendPage(res, "views", "shop.html");
 });
 
 export default router;

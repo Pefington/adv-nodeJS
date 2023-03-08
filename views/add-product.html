@@ -4,20 +4,43 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/images/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/images/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/images/favicon-16x16.png"
+    />
+    <link rel="stylesheet" href="/css/pico.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
     <title>Add product</title>
   </head>
   <body>
-    <header>
+    <header class="container">
       <nav>
         <ul>
+          <li><strong>NodeJS</strong></li>
+        </ul>
+        <ul>
           <li><a href="/">Shop</a></li>
-          <li><a href="/add-product">Add Product</a></li>
+          <li><a href="/admin/add-product">Add Product</a></li>
         </ul>
       </nav>
     </header>
-    <main>
-      <form action="/admin/add-product" method="post">
-        <input type="text" name="title" />
+    <main class="container">
+      <form action="/add-product" method="post" class="tw``">
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" />
         <button type="submit">Add Product</button>
       </form>
     </main>

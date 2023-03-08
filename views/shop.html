@@ -21,20 +21,23 @@
       sizes="16x16"
       href="/images/favicon-16x16.png"
     />
-    <link rel="manifest" href="/site.webmanifest" />
-    <link rel="stylesheet" href="css/out.css" />
-    <title>Add product</title>
+    <link rel="stylesheet" href="/css/pico.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+    <title>Shop</title>
   </head>
   <body>
-    <header class="flex h-14 items-center bg-yellow-400">
+    <header class="container">
       <nav>
-        <ul class="flex">
+        <ul>
+          <li><strong>NodeJS</strong></li>
+        </ul>
+        <ul>
           <li><a href="/">Shop</a></li>
-          <li><a href="/add-product">Add Product</a></li>
+          <li><a href="/admin/add-product">Add Product</a></li>
         </ul>
       </nav>
     </header>
-    <main>
+    <main class="container">
       <h1>My Products</h1>
       <p>List of all the products...</p>
     </main>
