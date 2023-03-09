@@ -1,11 +1,15 @@
-import express from "express";
+import express from 'express';
 
-import { sendPage } from "../utils/sendPage.js";
+import { productsList } from './admin.js';
 
 const router = express.Router();
 
-router.get("/", (_req, res) => {
-  sendPage(res, "views", "shop.html");
+router.get('/', (_req, res) => {
+  res.render('shop', {
+    products: productsList,
+    pageTitle: 'Shop',
+    path: '/',
+  });
 });
 
-export default router;
+export default router

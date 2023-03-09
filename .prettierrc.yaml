@@ -1,0 +1,7 @@
+"overrides":
+  [
+    {
+      "files": ["**/*.css", "**/*.hbs", "**/*.html"],
+      "options": { "singleQuote": false },
+    },
+  ]
