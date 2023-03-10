@@ -1,15 +1,8 @@
 import express from 'express';
 
-import { productsList } from './admin.js';
+import { getProducts } from '../controllers/products.js';
 
 const router = express.Router();
-
-router.get('/', (_req, res) => {
-  res.render('shop', {
-    products: productsList,
-    pageTitle: 'Shop',
-    path: '/',
-  });
-});
+router.get('/', getProducts);
 
 export default router

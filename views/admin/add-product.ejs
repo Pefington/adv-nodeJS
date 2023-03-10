@@ -1,6 +1,5 @@
-<%- include('partials/head') %>
-
-<%- include('partials/header', {path: path}) %>
+<%- include('../partials/head') %> <%- include('../partials/navigation',
+{pageTitle: pageTitle}) %>
 
 <main class="container">
   <form action="add-product" method="post">
@@ -9,3 +8,5 @@
     <button type="submit">Add Product</button>
   </form>
 </main>
+
+<%- include('../partials/end') %>
