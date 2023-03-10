@@ -1,20 +1,32 @@
 <header class="container">
   <nav>
     <ul>
-      <li><strong>NodeJS</strong></li>
+      <li><a href=""><strong>NodeJS</strong></a></li>
     </ul>
     <ul>
       <li>
-        <a href="/" class="<%= pageTitle === 'Shop' ? 'active' : '' %>">
+        <a href="/" class="<%= pageTitle === 'Shop' && 'active' %>">
           Shop
         </a>
       </li>
       <li>
-        <a
-          href="/admin/add-product"
-          class="<%= pageTitle === 'Add Product' ? 'active' : '' %>"
-        >
+        <a href="/products" class="<%= pageTitle === 'Products' && 'active' %>">
+          Products
+        </a>
+      </li>
+      <li>
+        <a href="/cart" class="<%= pageTitle === 'Cart' && 'active' %>">
+          Cart
+        </a>
+      </li>
+      <li>
+        <a href="/admin/add-product" class="<%= pageTitle === 'Add Product' && 'active' %>">
           Add Product
+        </a>
+      </li>
+      <li>
+        <a href="/admin/products" class="<%= pageTitle === 'Admin Products' && 'active' %>">
+          Admin Products
         </a>
       </li>
     </ul>

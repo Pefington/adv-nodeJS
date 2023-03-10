@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 
-import get404 from './controllers/staticPages.js';
+import get404 from './controllers/static.js';
 import adminRoutes from './routes/admin.js';
 import shopRoutes from './routes/shop.js';
 

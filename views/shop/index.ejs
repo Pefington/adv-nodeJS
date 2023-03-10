@@ -1,6 +1,25 @@
-<%- include('../partials/head') %> <%- include('../partials/navigation',
-{pageTitle: pageTitle}) %>
+<%- include('../partials/head') %>
 
-<main class="container"></main>
+<%- include('../partials/navigation') %>
+
+<main>
+  <% if (products.length > 0) { %>
+  <h1>All products</h1>
+  <% products.forEach(product => { %>
+  <article>
+    <header>
+      <h2><%= product.name %></h2>
+    </header>
+    <img src="https://source.unsplash.com/random/800x500/?<%= product.name %>" alt="A Book" />
+    <h3>A very cute cat!</h3>
+    <footer class="grid">
+      <h4>$19.99</h4>
+      <button>Add to Cart</button>
+    </footer>
+  </article>
+  <% }) %> <% } else { %>
+  <h1>No product found.</h1>
+  <% } %>
+</main>
 
 <%- include('../partials/end') %>

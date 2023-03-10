@@ -1,7 +1,8 @@
-<%- include('../partials/head') %> <%- include('../partials/navigation',
-{pageTitle: pageTitle}) %>
+<%- include('../partials/head') %>
 
-<main class="container">
+<%- include('../partials/navigation') %>
+
+<main>
   <% if (products.length > 0) { %>
   <h1>All products</h1>
   <% products.forEach(product => { %>
@@ -9,10 +10,7 @@
     <header>
       <h1><%= product.title %></h1>
     </header>
-    <img
-      src="https://source.unsplash.com/random/500x500/?<%= product.title %>"
-      alt="A Book"
-    />
+    <img src="https://source.unsplash.com/random/500x500/?<%= product.title %>" alt="A Book" />
     <h2>$19.99</h2>
     <p>A very interesting book about so many even more interesting things!</p>
     <button>Add to Cart</button>

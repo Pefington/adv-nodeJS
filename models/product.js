@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import rootDir from "../utils/rootDir.js";
+import rootDir from "../utils/getRootDir.js";
 
 const productsJSON = path.join( rootDir, "data", "products.json" );
 
@@ -12,8 +12,8 @@ const parseProducts = (cb) => {
 };
 
 class Product {
-  constructor(title) {
-    this.title = title;
+  constructor(name) {
+    this.name = name;
   }
 
   save() {
