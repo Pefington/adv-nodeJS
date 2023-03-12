@@ -1,5 +1,7 @@
-import Product from '../models/product.js';
-import capitalise from '../utils/capitalise.js';
+import fs from 'fs'
+
+import { productsJSON } from '../data/data.js';
+import { Product } from '../models/product.js';
 
 export const getAdminProducts = (_req, res) => {
   Product.fetchAll((productsArray) => {
@@ -16,9 +18,10 @@ export const getAddProduct = (_req, res) => {
   });
 };
 
-export const postAddProduct = (req, res) => {
-  const name = capitalise(req.body.name);
-  const product = new Product(name);
+export const postAddProduct = async (req, res) => {
+  const { name, description, price } = req.body;
+  const product = new Product(name, description, price);
+  await product.getPhotoURL();
   product.save();
   res.redirect('/');
 };

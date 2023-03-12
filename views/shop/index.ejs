@@ -10,10 +10,10 @@
     <header>
       <h2><%= product.name %></h2>
     </header>
-    <img src="https://source.unsplash.com/random/800x500/?<%= product.name %>" alt="A Book" />
-    <h3>A very cute cat!</h3>
+    <img src=" <%= product.photoURL %> " alt="A Book" />
+    <h3> <%= product.description %> </h3>
     <footer class="grid">
-      <h4>$19.99</h4>
+      <h4> <%= product.displayPrice %> </h4>
       <button>Add to Cart</button>
     </footer>
   </article>

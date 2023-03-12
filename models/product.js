@@ -1,9 +1,14 @@
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import { createApi } from 'unsplash-js';
 
-import rootDir from "../utils/getRootDir.js";
+import { productsJSON } from '../data/data.js';
+import { UNSPLASH_KEY } from '../env/env.js';
+import { capitalise } from '../utils/capitalise.js';
+import { formatPrice } from '../utils/formatPrice.js';
 
-const productsJSON = path.join( rootDir, "data", "products.json" );
+const unsplash = createApi({
+  accessKey: UNSPLASH_KEY,
+});
 
 const parseProducts = (cb) => {
   fs.readFile(productsJSON, (readError, fileContent) =>
@@ -11,9 +16,28 @@ const parseProducts = (cb) => {
   );
 };
 
-class Product {
-  constructor(name) {
-    this.name = name;
+export class Product {
+  constructor(name, description, price) {
+    this.name = capitalise(name);
+    this.description = capitalise(description);
+    this.price = price * 100;
+    this.displayPrice = formatPrice(this.price);
+  }
+
+  async getPhotoURL() {
+    const result = await unsplash.search.getPhotos({
+      query: this.name,
+      page: 1,
+      perPage: 100,
+      orientation: 'squarish',
+    });
+    if (result.errors) {
+      // eslint-disable-next-line no-console
+      console.log('error occurred: ', result.errors[0]);
+    }
+    const photos = result.response.results;
+    const index = Math.floor(Math.random() * photos.length);
+    this.photoURL = photos[index].urls.regular;
   }
 
   save() {
@@ -21,7 +45,7 @@ class Product {
       products.push(this);
       fs.writeFile(productsJSON, JSON.stringify(products), (writeError) => {
         // eslint-disable-next-line no-console
-        console.log(writeError);
+        if (writeError) console.log(writeError);
       });
     });
   }
@@ -30,5 +54,3 @@ class Product {
     parseProducts(cb);
   }
 }
-
-export default Product;
