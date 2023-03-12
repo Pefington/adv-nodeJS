@@ -8,12 +8,16 @@
   <% products.forEach(product => { %>
   <article>
     <header>
-      <h1><%= product.title %></h1>
+      <h2><%= product.name %></h2>
     </header>
-    <img src="https://source.unsplash.com/random/500x500/?<%= product.title %>" alt="A Book" />
-    <h2>$19.99</h2>
-    <p>A very interesting book about so many even more interesting things!</p>
-    <button>Add to Cart</button>
+    <img src=" <%= product.photoURL %> " alt="A Book" />
+    <footer>
+      <h3> <%= product.description %> </h3>
+      <h4> <%= product.displayPrice %> </h4>
+      <form action="/add-to-cart" method="post">
+        <button type="submit">Add to Cart</button>
+      </form>
+    </footer>
   </article>
   <% }) %> <% } else { %>
   <h1>No product found.</h1>

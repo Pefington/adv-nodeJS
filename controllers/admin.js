@@ -1,13 +1,10 @@
-import fs from 'fs'
-
-import { productsJSON } from '../data/data.js';
 import { Product } from '../models/product.js';
 
 export const getAdminProducts = (_req, res) => {
   Product.fetchAll((productsArray) => {
     res.render('admin/products', {
       products: productsArray,
-      pageTitle: 'Add Product',
+      pageTitle: 'Admin Products',
     });
   });
 };

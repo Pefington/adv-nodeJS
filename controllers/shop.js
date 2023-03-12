@@ -35,3 +35,9 @@ export const getCheckout = (_req, res) => {
     pageTitle: 'Checkout',
   });
 };
+
+export const getOrders = (_req, res) => {
+  res.render('shop/orders', {
+    pageTitle: 'Orders',
+  });
+};
