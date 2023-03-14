@@ -41,7 +41,8 @@ export class Product {
   }
 
   save() {
-    parseProducts((products) => {
+    parseProducts( ( products ) => {
+      this.id = products.length + 1
       products.push(this);
       fs.writeFile(productsJSON, JSON.stringify(products), (writeError) => {
         // eslint-disable-next-line no-console
@@ -52,5 +53,12 @@ export class Product {
 
   static fetchAll(cb) {
     parseProducts(cb);
+  }
+
+  static findByID( id, cb ) {
+    parseProducts( products => {
+      const product = products.find( prod => prod.id == id )
+      cb(product)
+    })
   }
 }

@@ -2,6 +2,20 @@
 
 <%- include('../partials/navigation') %>
 
-<main></main>
+<main>
+  <article>
+    <header>
+      <h2><%= product.name %></h2>
+    </header>
+    <img src=" <%= product.photoURL %> " alt="A Book" />
+    <footer>
+      <h3> <%= product.description %> </h3>
+      <h4> <%= product.displayPrice %> </h4>
+
+      <%- include('../partials/form-add-to-cart.ejs') %>
+
+    </footer>
+  </article>
+</main>
 
 <%- include('../partials/end') %>

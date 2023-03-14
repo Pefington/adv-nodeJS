@@ -8,8 +8,12 @@ router.get('/', shop.getIndex);
 
 router.get('/products', shop.getProducts);
 
+router.get('/products/:id', shop.getProduct);
+
 router.get('/cart', shop.getCart);
 
-router.get( '/checkout', shop.getCheckout );
+router.post('/cart', shop.postCart);
 
-router.get('/orders', shop.getOrders)
+router.get('/checkout', shop.getCheckout);
+
+router.get('/orders', shop.getOrders);
