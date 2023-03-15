@@ -20,6 +20,9 @@ rules:
   import/no-extraneous-dependencies: off
   import/prefer-default-export: off
   no-underscore-dangle: off
+  no-unused-expressions:
+    - error
+    - allowShortCircuit: true
   no-unused-vars: off
   simple-import-sort/exports: error
   simple-import-sort/imports: error

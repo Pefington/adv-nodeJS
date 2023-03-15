@@ -1,18 +1,19 @@
+import { Cart } from '../models/cart.js';
 import { Product } from '../models/product.js';
 
 export const getIndex = (_req, res) => {
-  Product.fetchAll((productsArray) => {
+  Product.fetchAll((products) => {
     res.render('shop/index', {
-      products: productsArray,
+      products,
       pageTitle: 'Shop',
     });
   });
 };
 
 export const getProducts = (_req, res) => {
-  Product.fetchAll((productsArray) => {
+  Product.fetchAll((products) => {
     res.render('shop/products', {
-      products: productsArray,
+      products,
       pageTitle: 'Products',
     });
   });
@@ -35,8 +36,10 @@ export const getCart = (_req, res) => {
 };
 
 export const postCart = (req, res) => {
-  const productID = req.body.productID;
-  console.log(productID);
+  const {productID} = req.body;
+  Product.findByID( productID, product => {
+    Cart.addProduct(productID, product.price)
+  })
   res.redirect('/cart');
 };
 

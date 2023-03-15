@@ -7,12 +7,12 @@
     <header>
       <h2><%= product.name %></h2>
     </header>
-    <img src=" <%= product.photoURL %> " alt="A Book" />
+    <img src=" <%= product.photoURL %> " alt="<%= product.name %>" />
     <footer>
       <h3> <%= product.description %> </h3>
       <h4> <%= product.displayPrice %> </h4>
 
-      <%- include('../partials/form-add-to-cart.ejs') %>
+      <%- include('../partials/form-add-to-cart.ejs', { product }) %>
 
     </footer>
   </article>

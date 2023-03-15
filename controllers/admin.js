@@ -9,13 +9,19 @@ export const getAdminProducts = (_req, res) => {
   });
 };
 
-export const getAddProduct = (_req, res) => {
-  res.render('admin/add-product', {
-    pageTitle: 'Add Product',
+export const getCreateProduct = (_req, res) => {
+  res.render('admin/edit-product', {
+    pageTitle: 'Create Product',
+    edit: false,
   });
 };
 
-export const postAddProduct = async (req, res) => {
+export const postCreateProduct = async ( req, res ) => {
+
+
+  console.log( req.body )
+
+
   const { name, description, price } = req.body;
   const product = new Product(name, description, price);
   await product.getPhotoURL();
@@ -23,14 +29,24 @@ export const postAddProduct = async (req, res) => {
   res.redirect('/');
 };
 
-export const getEditProduct = (_req, res) => {
-  res.render('admin/edit-product', {
-    pageTitle: 'Edit Product',
-  });
+export const getEditProduct = (req, res) => {
+  const { id } = req.params;
+  Product.findByID(id, (product) =>
+    product
+      ? res.render('admin/edit-product', {
+          pageTitle: 'Edit Product',
+          edit: true,
+          product,
+        })
+      : res.redirect('/')
+  );
 };
 
 export const postEditProduct = (req, res) => {
-  const { product } = req;
-  product.save();
-  res.redirect('/');
+  const { id, name, description, price, photoURL } = req.body;
+  const product = new Product( name, description, price )
+  product.id = id
+  product.photoURL = photoURL
+  product.save()
+  res.redirect('products')
 };

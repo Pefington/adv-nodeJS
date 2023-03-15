@@ -10,11 +10,10 @@ const unsplash = createApi({
   accessKey: UNSPLASH_KEY,
 });
 
-const parseProducts = (cb) => {
-  fs.readFile(productsJSON, (readError, fileContent) =>
-    readError ? cb([]) : cb(JSON.parse(fileContent))
+const parseProducts = (cb) =>
+  fs.readFile(productsJSON, (err, fileContent) =>
+    err ? cb([]) : cb(JSON.parse(fileContent))
   );
-};
 
 export class Product {
   constructor(name, description, price) {
@@ -31,22 +30,28 @@ export class Product {
       perPage: 100,
       orientation: 'squarish',
     });
-    if (result.errors) {
-      // eslint-disable-next-line no-console
-      console.log('error occurred: ', result.errors[0]);
-    }
+    result.errors && console.log('error occurred: ', result.errors[0]);
+
     const photos = result.response.results;
     const index = Math.floor(Math.random() * photos.length);
-    this.photoURL = photos[index].urls.regular;
+    this.photoURL ||= photos[index].urls.small;
   }
 
   save() {
-    parseProducts( ( products ) => {
-      this.id = products.length + 1
+    parseProducts((products) => {
+      if ( this.id ) {
+        const productIndex = products.findIndex((prod) => prod.id === this.id);
+        const productsCopy = [...products];
+        productsCopy[productIndex] = this;
+        fs.writeFile(productsJSON, JSON.stringify(productsCopy), (err) => {
+          err && console.log(err);
+        });
+        return;
+      }
+      this.id = (products.length + 1).toString();
       products.push(this);
-      fs.writeFile(productsJSON, JSON.stringify(products), (writeError) => {
-        // eslint-disable-next-line no-console
-        if (writeError) console.log(writeError);
+      fs.writeFile(productsJSON, JSON.stringify(products), (err) => {
+        err && console.log(err);
       });
     });
   }
@@ -55,10 +60,10 @@ export class Product {
     parseProducts(cb);
   }
 
-  static findByID( id, cb ) {
-    parseProducts( products => {
-      const product = products.find( prod => prod.id == id )
-      cb(product)
-    })
+  static findByID(id, cb) {
+    parseProducts((products) => {
+      const product = products.find((prod) => prod.id === id);
+      cb(product);
+    });
   }
 }
