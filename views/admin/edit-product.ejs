@@ -3,12 +3,10 @@
 <%- include("../partials/navigation") %>
 
 <main>
-  <h1>
-    <%= edit ? `Edit ${product.name}` : 'Create Product' %>
-  </h1>
+
+  <h1><%= edit ? `Edit ${product.name}` : 'Create Product' %></h1>
 
   <form action=<%= edit ? `/admin/edit-product` : '/admin/create-product' %> method="post">
-
     <label for="name">Product name</label>
     <input type="text" id="name" name="name" placeholder="Product name" value="<%= edit ? product.name : 'cat' %>"
       autofocus required onfocus="this.select()">
@@ -26,9 +24,7 @@
       <%= edit && `value=${product.photoURL}` %> onfocus="this.select()">
 
     <% if (edit) { %><input type="hidden" name="id" value="<%= product.id %>"><% } %>
-
     <button type="submit"><%= edit ? 'Update product' : 'Create product' %></button>
-
   </form>
 
 </main>

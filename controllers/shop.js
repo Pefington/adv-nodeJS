@@ -1,8 +1,10 @@
+import { productsJSON } from '../data/data.js';
 import { Cart } from '../models/cart.js';
-import { Product } from '../models/product.js';
+import { findByID } from '../utils/findByID.js';
+import { parseJSON } from '../utils/parseJSON.js';
 
 export const getIndex = (_req, res) => {
-  Product.fetchAll((products) => {
+  parseJSON(productsJSON, (products) => {
     res.render('shop/index', {
       products,
       pageTitle: 'Shop',
@@ -11,7 +13,7 @@ export const getIndex = (_req, res) => {
 };
 
 export const getProducts = (_req, res) => {
-  Product.fetchAll((products) => {
+  parseJSON(productsJSON, (products) => {
     res.render('shop/products', {
       products,
       pageTitle: 'Products',
@@ -20,8 +22,8 @@ export const getProducts = (_req, res) => {
 };
 
 export const getProduct = (req, res) => {
-  const productID = req.params.id;
-  Product.findByID(productID, (product) =>
+  const { id } = req.params;
+  findByID(productsJSON, id, (product) =>
     res.render('shop/product', {
       product,
       pageTitle: product.name,
@@ -36,10 +38,10 @@ export const getCart = (_req, res) => {
 };
 
 export const postCart = (req, res) => {
-  const {productID} = req.body;
-  Product.findByID( productID, product => {
-    Cart.addProduct(productID, product.price)
-  })
+  const { productID } = req.body;
+  findByID(productsJSON, productID, (product) => {
+    Cart.addProduct(productID, product.price);
+  });
   res.redirect('/cart');
 };
 

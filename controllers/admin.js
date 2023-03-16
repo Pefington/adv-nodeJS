@@ -1,10 +1,13 @@
+import { productsJSON } from '../data/data.js';
 import { Product } from '../models/product.js';
+import { findByID } from '../utils/findByID.js';
+import { parseJSON } from '../utils/parseJSON.js';
 
 export const getAdminProducts = (_req, res) => {
-  Product.fetchAll((productsArray) => {
+  parseJSON(productsJSON, (products) => {
     res.render('admin/products', {
-      products: productsArray,
       pageTitle: 'Admin Products',
+      products,
     });
   });
 };
@@ -16,11 +19,7 @@ export const getCreateProduct = (_req, res) => {
   });
 };
 
-export const postCreateProduct = async ( req, res ) => {
-
-
-  console.log( req.body )
-
+export const postCreateProduct = async (req, res) => {
 
   const { name, description, price } = req.body;
   const product = new Product(name, description, price);
@@ -31,7 +30,7 @@ export const postCreateProduct = async ( req, res ) => {
 
 export const getEditProduct = (req, res) => {
   const { id } = req.params;
-  Product.findByID(id, (product) =>
+  findByID(productsJSON, id, (product) =>
     product
       ? res.render('admin/edit-product', {
           pageTitle: 'Edit Product',
@@ -44,9 +43,15 @@ export const getEditProduct = (req, res) => {
 
 export const postEditProduct = (req, res) => {
   const { id, name, description, price, photoURL } = req.body;
-  const product = new Product( name, description, price )
-  product.id = id
-  product.photoURL = photoURL
-  product.save()
-  res.redirect('products')
+  const product = new Product(name, description, price);
+  product.id = id;
+  product.photoURL = photoURL;
+  product.save();
+  res.redirect('products');
+};
+
+export const postDeleteProduct = (req, res) => {
+  const { id } = req.body;
+  Product.delete(id);
+  res.redirect('products');
 };

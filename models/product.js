@@ -5,15 +5,12 @@ import { productsJSON } from '../data/data.js';
 import { UNSPLASH_KEY } from '../env/env.js';
 import { capitalise } from '../utils/capitalise.js';
 import { formatPrice } from '../utils/formatPrice.js';
+import { parseJSON } from '../utils/parseJSON.js';
+import { Cart } from './cart.js';
 
 const unsplash = createApi({
   accessKey: UNSPLASH_KEY,
 });
-
-const parseProducts = (cb) =>
-  fs.readFile(productsJSON, (err, fileContent) =>
-    err ? cb([]) : cb(JSON.parse(fileContent))
-  );
 
 export class Product {
   constructor(name, description, price) {
@@ -21,13 +18,14 @@ export class Product {
     this.description = capitalise(description);
     this.price = price * 100;
     this.displayPrice = formatPrice(this.price);
+    this.photoURL = '';
   }
 
   async getPhotoURL() {
     const result = await unsplash.search.getPhotos({
       query: this.name,
       page: 1,
-      perPage: 100,
+      perPage: 10,
       orientation: 'squarish',
     });
     result.errors && console.log('error occurred: ', result.errors[0]);
@@ -38,8 +36,8 @@ export class Product {
   }
 
   save() {
-    parseProducts((products) => {
-      if ( this.id ) {
+    parseJSON(productsJSON, (products) => {
+      if (this.id) {
         const productIndex = products.findIndex((prod) => prod.id === this.id);
         const productsCopy = [...products];
         productsCopy[productIndex] = this;
@@ -56,14 +54,13 @@ export class Product {
     });
   }
 
-  static fetchAll(cb) {
-    parseProducts(cb);
-  }
-
-  static findByID(id, cb) {
-    parseProducts((products) => {
-      const product = products.find((prod) => prod.id === id);
-      cb(product);
+  static delete(id) {
+    parseJSON( productsJSON, ( products ) => {
+      const product = products.find(prod => prod.id === id)
+      const updatedProducts = products.filter((prod) => prod.id !== id);
+      fs.writeFile(productsJSON, JSON.stringify(updatedProducts), (err) =>
+        err ? console.log(err) : Cart.deleteProduct(id, product.price)
+      );
     });
   }
 }

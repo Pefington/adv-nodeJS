@@ -11,3 +11,5 @@ router.post('/create-product', admin.postCreateProduct);
 
 router.get('/edit-product/:id', admin.getEditProduct);
 router.post('/edit-product', admin.postEditProduct);
+
+router.post('/delete-product', admin.postDeleteProduct);
