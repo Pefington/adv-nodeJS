@@ -8,9 +8,7 @@ import { formatPrice } from '../utils/formatPrice.js';
 import { parseJSON } from '../utils/parseJSON.js';
 import { Cart } from './cart.js';
 
-const unsplash = createApi({
-  accessKey: UNSPLASH_KEY,
-});
+const unsplash = createApi({ accessKey: UNSPLASH_KEY });
 
 export class Product {
   constructor(name, description, price) {
@@ -21,46 +19,49 @@ export class Product {
     this.photoURL = '';
   }
 
+  static parseProducts = () => parseJSON(productsJSON);
+
+  static getProductFromID = (id) =>
+    Product.parseProducts().find((prod) => prod.id === id);
+
+  static getIndexFromID = (id) =>
+    Product.parseProducts().findIndex((prod) => prod.id === id);
+
+  save() {
+    const products = Product.parseProducts();
+
+    if (this.id) {
+      const index = Product.getIndexFromID(this.id);
+      products[index] = this;
+      fs.writeFileSync(productsJSON, JSON.stringify(products));
+    } else {
+      this.id = (products.length + 1).toString();
+      products.push(this);
+      fs.writeFileSync(productsJSON, JSON.stringify(products));
+    }
+  }
+
   async getPhotoURL() {
-    const result = await unsplash.search.getPhotos({
+    const request = await unsplash.search.getPhotos({
       query: this.name,
       page: 1,
       perPage: 10,
       orientation: 'squarish',
     });
-    result.errors && console.log('error occurred: ', result.errors[0]);
+    request.errors && console.log('Unsplash error: ', request.errors[0]);
 
-    const photos = result.response.results;
+    const photos = request.response.results;
     const index = Math.floor(Math.random() * photos.length);
+
     this.photoURL ||= photos[index].urls.small;
   }
 
-  save() {
-    parseJSON(productsJSON, (products) => {
-      if (this.id) {
-        const productIndex = products.findIndex((prod) => prod.id === this.id);
-        const productsCopy = [...products];
-        productsCopy[productIndex] = this;
-        fs.writeFile(productsJSON, JSON.stringify(productsCopy), (err) => {
-          err && console.log(err);
-        });
-        return;
-      }
-      this.id = (products.length + 1).toString();
-      products.push(this);
-      fs.writeFile(productsJSON, JSON.stringify(products), (err) => {
-        err && console.log(err);
-      });
-    });
-  }
-
   static delete(id) {
-    parseJSON( productsJSON, ( products ) => {
-      const product = products.find(prod => prod.id === id)
-      const updatedProducts = products.filter((prod) => prod.id !== id);
-      fs.writeFile(productsJSON, JSON.stringify(updatedProducts), (err) =>
-        err ? console.log(err) : Cart.deleteProduct(id, product.price)
-      );
-    });
+    const products = Product.parseProducts();
+    const updatedProducts = products.filter((prod) => prod.id !== id);
+    fs.writeFileSync(productsJSON, JSON.stringify(updatedProducts));
+
+    const { price } = Product.getProductFromID(id);
+    Cart.deleteProduct(id, price);
   }
 }

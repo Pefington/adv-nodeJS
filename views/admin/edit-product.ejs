@@ -13,10 +13,10 @@
 
     <label for="description">Product description</label>
     <textarea id="description" name="description" placeholder="Product description" rows="5" required
-      onfocus="this.select()"><%= edit ? product.description : 'cat description' %></textarea>
+      onfocus="this.select()"><%= edit ? product.description : 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quas quibusdam sequi eaque dolores ut, cupiditate aut doloribus deserunt qui quos voluptate ullam sapiente temporibus cumque a totam, esse delectus eos?' %></textarea>
 
     <label for="price">Product price</label>
-    <input type="text" id="price" name="price" placeholder="€" value="<%= edit ? product.price / 100 : 9.99 %>" required
+    <input type="text" id="price" name="price" placeholder="€" value="<%= edit ? product.price / 100 : 1 %>" required
       onfocus="this.select()"></input>
 
     <label for="photoURL">Photo URL</label>
