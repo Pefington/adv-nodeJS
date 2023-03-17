@@ -6,7 +6,7 @@
 
   <% if (products.length) { %>
 
-  <h1>All products</h1>
+  <h2>All products</h2>
 
   <% products.forEach(product => { %>
 
@@ -18,8 +18,8 @@
     <img src="<%= product.photoURL %>" alt="<%= product.name %>" />
 
     <footer class="container">
-      <h3> <%= product.description %> </h3>
-      <h4> <%= product.displayPrice %> </h4>
+      <p> <%= product.description %> </p>
+      <h4> <%= product.price %> </h4>
 
       <a href="/admin/edit-product/<%= product.id %>" role="button">Edit product</a>
 
@@ -34,7 +34,7 @@
 
   <% }) %><% } else { %>
 
-  <h1>No product found.</h1>
+  <h2>No product found.</h2>
 
   <% } %>
 

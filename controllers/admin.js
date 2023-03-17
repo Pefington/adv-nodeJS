@@ -2,7 +2,7 @@ import { productsJSON } from '../data/data.js';
 import { Product } from '../models/product.js';
 
 export const getAdminProducts = (_req, res) => {
-  const products = Product.parseProducts();
+  const products = Product.getProducts();
 
   res.render('admin/products', {
     pageTitle: 'Admin Products',

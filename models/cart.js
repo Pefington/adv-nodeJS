@@ -4,17 +4,19 @@ import { cartJSON } from '../data/data.js';
 import { parseJSON } from '../utils/parseJSON.js';
 
 export class Cart {
-  static parseCart = () => parseJSON(cartJSON);
+  static getCart = () => parseJSON(cartJSON);
+
+  static getProductIDs = (cart) => cart.products.map((prod) => prod.id);
 
   static getIndex = (id) =>
-    Cart.parseCart().products.findIndex((prod) => prod.id === id);
+    Cart.getCart().products.findIndex((prod) => prod.id === id);
 
   static getCartProductFromID = (id) =>
-    Cart.parseCart().products.find((prod) => prod.id === id);
+    Cart.getCart().products.find((prod) => prod.id === id);
 
   static addProduct(id, price) {
     let cart = { products: [], totalPrice: 0 };
-    const parsedCart = Cart.parseCart();
+    const parsedCart = Cart.getCart();
     if (parsedCart.products) cart = JSON.parse(JSON.stringify(parsedCart));
 
     const index = Cart.getIndex(id);
@@ -31,7 +33,7 @@ export class Cart {
   }
 
   static deleteProduct(id, price) {
-    const cart = Cart.parseCart();
+    const cart = Cart.getCart();
     const product = Cart.getCartProductFromID(id);
     cart.products = cart.products.filter((prod) => prod.id !== id);
     cart.totalPrice -= price * product.quantity;

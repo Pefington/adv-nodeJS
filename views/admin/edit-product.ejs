@@ -4,7 +4,7 @@
 
 <main>
 
-  <h1><%= edit ? `Edit ${product.name}` : 'Create Product' %></h1>
+  <h2><%= edit ? `Edit ${product.name}` : 'Create Product' %></h2>
 
   <form action=<%= edit ? `/admin/edit-product` : '/admin/create-product' %> method="post">
     <label for="name">Product name</label>

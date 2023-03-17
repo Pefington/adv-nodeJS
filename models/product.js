@@ -19,16 +19,16 @@ export class Product {
     this.photoURL = '';
   }
 
-  static parseProducts = () => parseJSON(productsJSON);
+  static getProducts = () => parseJSON(productsJSON);
 
   static getProductFromID = (id) =>
-    Product.parseProducts().find((prod) => prod.id === id);
+    Product.getProducts().find((prod) => prod.id === id);
 
   static getIndexFromID = (id) =>
-    Product.parseProducts().findIndex((prod) => prod.id === id);
+    Product.getProducts().findIndex((prod) => prod.id === id);
 
   save() {
-    const products = Product.parseProducts();
+    const products = Product.getProducts();
 
     if (this.id) {
       const index = Product.getIndexFromID(this.id);
@@ -57,7 +57,7 @@ export class Product {
   }
 
   static delete(id) {
-    const products = Product.parseProducts();
+    const products = Product.getProducts();
     const updatedProducts = products.filter((prod) => prod.id !== id);
     fs.writeFileSync(productsJSON, JSON.stringify(updatedProducts));
 

@@ -1,0 +1,17 @@
+<article>
+
+  <h2><%= product.name %></h2>
+
+  <img src=" <%= product.photoURL %> " alt="<%= product.name %>" />
+
+  <p> <%= product.description %> </p>
+
+  <h4> <%= product.displayPrice %> </h4>
+
+  <a href="/products/<%= product.id %>" role="button">Details</a>
+
+  <footer>
+    <%- include('../partials/form-add-to-cart.ejs', { product }) %>
+  </footer>
+
+</article>
