@@ -4,8 +4,13 @@ import express from 'express';
 import { get404 } from './controllers/static.js';
 import { router as adminRoutes } from './routes/admin.js';
 import { router as shopRoutes } from './routes/shop.js';
+import db from './utils/database.js';
 
 const app = express();
+
+db.execute('SELECT * from products')
+  .then((res) => console.log(res))
+  .catch((err) => console.error(err));
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
