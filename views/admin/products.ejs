@@ -11,23 +11,19 @@
   <% products.forEach(product => { %>
 
   <article>
-    <header>
-      <h2><%= product.name %></h2>
-    </header>
 
-    <img src="<%= product.photoURL %>" alt="<%= product.name %>" />
+    <h2><%= product.name %></h2>
 
-    <footer class="container">
-      <p> <%= product.description %> </p>
-      <h4> <%= product.price %> </h4>
+    <img src=" <%= product.photoURL %> " alt="<%= product.name %>" />
 
-      <a href="/admin/edit-product/<%= product.id %>" role="button">Edit product</a>
+    <p> <%= product.description %> </p>
 
-      <form action="/admin/delete-product" method="post">
-        <input type="hidden" name="id" value="<%= product.id %>">
-        <button type="submit">⚠️Delete product⚠️</button>
-      </form>
+    <h4> <%= formatPrice(product.price) %> </h4>
 
+    <a href="/admin/edit-product/<%= product.id %>" role="button">Edit product</a>
+
+    <footer>
+      <%- include('../partials/form-delete-product.ejs', {product}) %>
     </footer>
 
   </article>

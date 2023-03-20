@@ -6,12 +6,12 @@
 
   <p> <%= product.description %> </p>
 
-  <h4> <%= product.displayPrice %> </h4>
+  <h4> <%= formatPrice(product.price) %> </h4>
 
   <a href="/products/<%= product.id %>" role="button">Details</a>
 
   <footer>
-    <%- include('../partials/form-add-to-cart.ejs', { product }) %>
+    <%- include('../partials/form-add-to-cart.ejs', {product}) %>
   </footer>
 
 </article>

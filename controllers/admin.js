@@ -1,16 +1,23 @@
-import { productsJSON } from '../data/data.js';
 import { Product } from '../models/product.js';
+import { capitalise } from '../utils/capitalise.js';
+import { formatPrice } from '../utils/formatPrice.js';
+import { getPhotoURL } from '../utils/getPhotoURL.js';
 
-export const getAdminProducts = (_req, res) => {
-  const products = Product.getProducts();
+export const getAdminProducts = async (_, res) => {
+  try {
+    const products = await Product.findAll();
 
-  res.render('admin/products', {
-    pageTitle: 'Admin Products',
-    products,
-  });
+    res.render('admin/products', {
+      pageTitle: 'Admin Products',
+      formatPrice,
+      products,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
 
-export const getCreateProduct = (_req, res) => {
+export const getCreateProduct = (_, res) => {
   res.render('admin/edit-product', {
     pageTitle: 'Create Product',
     edit: false,
@@ -19,39 +26,67 @@ export const getCreateProduct = (_req, res) => {
 
 export const postCreateProduct = async (req, res) => {
   const { name, description, price } = req.body;
-  const product = new Product(name, description, price);
-  await product.getPhotoURL();
-  product.save();
+  try {
+    await Product.create({
+      name: capitalise(name),
+      description: capitalise(description),
+      price: price * 100,
+      photoURL: await getPhotoURL(name),
+    });
+  } catch (error) {
+    console.error(error);
+  }
 
   res.redirect('/');
 };
 
-export const getEditProduct = (req, res) => {
+export const getEditProduct = async (req, res) => {
   const { id } = req.params;
-  const product = Product.getProductFromID(id);
-
-  if (product) {
-    res.render('admin/edit-product', {
-      pageTitle: 'Edit Product',
-      edit: true,
-      product,
-    });
-  } else {
-    res.redirect('/');
+  try {
+    const product = await Product.findByPk(id);
+    if (product) {
+      res.render('admin/edit-product', {
+        pageTitle: 'Edit Product',
+        edit: true,
+        product,
+      });
+    } else {
+      res.redirect('/');
+    }
+  } catch (error) {
+    console.error(error);
   }
 };
 
-export const postEditProduct = (req, res) => {
+export const postEditProduct = async (req, res) => {
   const { id, name, description, price, photoURL } = req.body;
-  const product = new Product(name, description, price);
-  product.id = id;
-  product.photoURL = photoURL;
-  product.save();
-  res.redirect('products');
+  try {
+    const product = await Product.findByPk(id);
+    // @ts-ignore
+    product.name = name;
+    // @ts-ignore
+    product.description = description;
+    // @ts-ignore
+    product.price = price * 100;
+    // @ts-ignore
+    product.photoURL = photoURL || (await getPhotoURL(name));
+    await product.save();
+
+    res.redirect('products');
+  } catch (error) {
+    console.error(error);
+  }
 };
 
-export const postDeleteProduct = (req, res) => {
+export const postDeleteProduct = async (req, res) => {
   const { id } = req.body;
-  Product.delete(id);
-  res.redirect('products');
+  try {
+    // @ts-ignore
+    const product = await Product.findByPk(id);
+    await product.destroy();
+
+    res.redirect('products');
+  } catch (error) {
+    console.error(error);
+  }
 };

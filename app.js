@@ -2,15 +2,11 @@ import bodyParser from 'body-parser';
 import express from 'express';
 
 import { get404 } from './controllers/static.js';
+import { sequelize } from './data/database.js';
 import { router as adminRoutes } from './routes/admin.js';
 import { router as shopRoutes } from './routes/shop.js';
-import db from './utils/database.js';
 
 const app = express();
-
-db.execute('SELECT * from products')
-  .then((res) => console.log(res))
-  .catch((err) => console.error(err));
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
@@ -23,4 +19,11 @@ app.use(shopRoutes);
 
 app.use(get404);
 
-app.listen(3000);
+try {
+  await sequelize.sync();
+  console.log('Sequelize started...');
+  app.listen(3000);
+  console.log('Dev server started...');
+} catch (error) {
+  console.error(error);
+}
