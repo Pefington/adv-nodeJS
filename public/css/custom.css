@@ -7,13 +7,14 @@
 
 .active {
   font-weight: 600;
-  text-decoration: underline var(--primary-focus) 3px
-}
-
-img {
-  border-radius: 2%;
+  text-decoration: underline var(--primary-focus) 3px;
 }
 
 article {
   text-align: center;
+}
+
+article > img {
+  margin: 2rem;
+  border-radius: 2%;
 }

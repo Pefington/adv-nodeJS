@@ -10,25 +10,9 @@
 
   <% products.forEach(product => { %>
 
-  <article>
+  <%- include('../partials/product-card.ejs', {product}) %>
 
-    <h2><%= product.name %></h2>
-
-    <img src=" <%= product.photoURL %> " alt="<%= product.name %>" />
-
-    <p> <%= product.description %> </p>
-
-    <h4> <%= formatPrice(product.price) %> </h4>
-
-    <a href="/admin/edit-product/<%= product.id %>" role="button">Edit product</a>
-
-    <footer>
-      <%- include('../partials/form-delete-product.ejs', {product}) %>
-    </footer>
-
-  </article>
-
-  <% }) %><% } else { %>
+  <% })} else { %>
 
   <h2>No product found.</h2>
 

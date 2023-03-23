@@ -3,30 +3,19 @@
 <%- include('../partials/navigation') %>
 
 <main>
-  <% if (products.size) { %>
+  <% if (products.length) { %>
 
   <h2>Cart</h2>
 
-  <% products.forEach((quantity, product) => { %>
+  <% products.forEach((product) => { %>
 
-  <article>
-    <h2><%= product.name %></h2>
-
-    <img src=" <%= product.photoURL %> " alt="<%= product.name %>" />
-
-    <h4> <%= `Price: ${product.displayPrice} Quantity: ${quantity}` %> </h4>
-
-    <a href="/products/<%= product.id %>" role="button">Details</a>
-
-    <footer><%- include('../partials/form-remove-from-cart.ejs', {product}) %></footer>
-
-  </article>
+  <%- include('../partials/product-card', {product}) %>
 
   <% }) %>
-
+  <%- include('../partials/form-order') %>
   <% } else { %>
 
-  <h2>No product found.</h2>
+  <h2>Cart is empty.</h2>
 
   <% } %>
 </main>

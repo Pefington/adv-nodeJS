@@ -4,7 +4,7 @@ import { UNSPLASH_KEY } from '../env/env.js';
 
 const unsplash = createApi({ accessKey: UNSPLASH_KEY });
 
-export async function getPhotoURL(query) {
+export async function getphotoUrl(query) {
   try {
     const request = await unsplash.search.getPhotos({
       query,

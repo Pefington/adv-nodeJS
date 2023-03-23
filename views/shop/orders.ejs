@@ -3,7 +3,21 @@
 <%- include('../partials/navigation') %>
 
 <main>
-  <h2>orders</h2>
+  <% if (orders.length) { %>
+
+  <h2>Orders</h2>
+
+  <% orders.forEach((order) => { %>
+
+  <%- include('../partials/product-card', {product: order}) %>
+
+  <% }) %>
+  <%- include('../partials/form-order') %>
+  <% } else { %>
+
+  <h2>No orders found.</h2>
+
+  <% } %>
 </main>
 
 <%- include('../partials/end') %>

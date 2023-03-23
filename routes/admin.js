@@ -7,7 +7,7 @@ export const router = express.Router();
 router.get('/products', admin.getAdminProducts);
 
 router.get('/create-product', admin.getCreateProduct);
-router.post('/create-product', admin.postCreateProduct);
+router.post('/create-product', admin.postAddProduct);
 
 router.get('/edit-product/:id', admin.getEditProduct);
 router.post('/edit-product', admin.postEditProduct);
