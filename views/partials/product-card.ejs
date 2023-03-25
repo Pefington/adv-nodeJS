@@ -7,17 +7,23 @@
   <h3>
     <% if (pageTitle === 'Cart') { %>
     <%= `${product.cartItem.quantity} x ` %>
+    <% } else if (pageTitle === 'Orders') { %>
+    <%= `${product.orderItem.quantity} x ` %>
     <% } %>
     <%= formatPrice(product.price) %>
   </h3>
 
+  <% if (pageTitle !== 'Orders') { %>
   <a href="/products/<%= product.id %>" role="button">Details</a>
+  <% } %>
 
   <footer>
     <% if (pageTitle === 'Admin Products') { %>
     <%- include('../partials/form-delete-product.ejs', {product}) %>
     <% } else if (pageTitle === 'Cart') { %>
     <%- include('../partials/form-remove-from-cart.ejs', {product}) %>
+    <% } else if (pageTitle === 'Orders') { %>
+    <%- include('../partials/form-checkout.ejs', {product}) %>
     <% } else { %>
     <%- include('../partials/form-add-to-cart.ejs', {product}) %>
     <% } %>

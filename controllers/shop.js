@@ -1,3 +1,5 @@
+import fs from 'fs';
+
 import { Product } from '../models/product.js';
 import { formatPrice } from '../utils/formatPrice.js';
 
@@ -101,7 +103,7 @@ export const getCheckout = (_, res) => {
 
 export const getOrders = async (req, res) => {
   const { user } = req;
-  const orders = await user.getOrders();
+  const orders = await user.getOrders({ include: ['products'] });
   res.render('shop/orders', {
     pageTitle: 'Orders',
     formatPrice,
@@ -112,50 +114,19 @@ export const getOrders = async (req, res) => {
 export const postOrder = async (req, res) => {
   try {
     const cart = await req.user.getCart();
-    let products = await cart.getProducts();
-    products = products.map(({ orderItem, cartItem, ...product }) => ({
-      ...product,
-      orderItem: { quantity: cartItem.quantity },
-    }));
-
-    // const order = await req.user.createOrder();
-    // await order.addProducts(products);
-    req.user.createOrder().then((order) => order.addProducts(products))
-    // .catch((err) => console.log(err));
-
+    const order = await req.user.createOrder();
+    const products = await cart.getProducts();
+    await order.addProducts(
+      products.map((product) => {
+        // eslint-disable-next-line no-param-reassign
+        product.orderItem = { quantity: product.cartItem.quantity };
+        return product;
+      })
+    );
     await cart.setProducts(null);
   } catch (error) {
     console.error(`\n\n\n${error}\n`);
+  } finally {
+    res.redirect('/orders');
   }
-  res.redirect('/orders');
 };
-
-// exports.postOrder = (req, res, next) => {
-//   let fetchedCart;
-//   req.user
-//     .getCart()
-//     .then((cart) => {
-//       fetchedCart = cart;
-//       return cart.getProducts();
-//     })
-//     .then((products) => {
-//       return req.user
-//         .createOrder()
-//         .then((order) => {
-//           return order.addProducts(
-//             products.map((product) => {
-//               product.orderItem = { quantity: product.cartItem.quantity };
-//               return product;
-//             })
-//           );
-//         })
-//         .catch((err) => console.log(err));
-//     })
-//     .then((result) => {
-//       return fetchedCart.setProducts(null);
-//     })
-//     .then((result) => {
-//       res.redirect('/orders');
-//     })
-//     .catch((err) => console.log(err));
-// };

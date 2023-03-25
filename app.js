@@ -15,6 +15,17 @@ import { getphotoUrl } from './utils/getPhotoUrl.js';
 
 const app = express();
 
+Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
+User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
+Order.belongsTo(User);
+User.hasMany(Order);
+Order.belongsToMany(Product, { through: OrderItem });
+Product.belongsToMany(Order, { through: OrderItem });
+
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
@@ -32,17 +43,6 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
 app.use(get404);
-
-Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
-User.hasMany(Product);
-User.hasOne(Cart);
-Cart.belongsTo(User);
-Cart.belongsToMany(Product, { through: CartItem });
-Product.belongsToMany(Cart, { through: CartItem });
-Order.belongsTo(User);
-User.hasMany(Order);
-Order.belongsToMany(Product, { through: OrderItem });
-Product.belongsToMany(Order, { through: OrderItem });
 
 try {
   await sequelize.sync({

@@ -9,11 +9,13 @@
 
   <% orders.forEach((order) => { %>
 
-  <%- include('../partials/product-card', {product: order}) %>
+  <% order.products.forEach(product => { %>
+
+  <%- include('../partials/product-card.ejs', {product}) %>
 
   <% }) %>
-  <%- include('../partials/form-order') %>
-  <% } else { %>
+
+  <% })} else { %>
 
   <h2>No orders found.</h2>
 
