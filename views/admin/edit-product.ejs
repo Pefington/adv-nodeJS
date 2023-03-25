@@ -23,7 +23,7 @@
     <input type="text" id="photoUrl" name="photoUrl" placeholder="Will search unsplash if left empty"
       <%= edit && `value=${product.photoUrl}` %> onfocus="this.select()">
 
-    <% if (edit) { %><input type="hidden" name="id" value="<%= product.id %>"><% } %>
+    <% if (edit) { %><input type="hidden" name="id" value="<%= product._id %>"><% } %>
     <button type="submit"><%= edit ? 'Update product' : 'Create product' %></button>
   </form>
 

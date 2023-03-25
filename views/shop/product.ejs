@@ -3,8 +3,12 @@
 <%- include('../partials/navigation') %>
 
 <main>
-
+  <% if (product !== null) { %>
+    <h2>Product details</h2>
   <%- include('../partials/product-card', {product}) %>
+  <% } else { %>
+  <h2> Sorry, this product does not exist 😥</h2>
+  <% } %>
 
 </main>
 

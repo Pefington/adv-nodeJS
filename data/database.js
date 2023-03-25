@@ -1,8 +1,32 @@
-import { Sequelize } from 'sequelize';
+import { MongoClient, ServerApiVersion } from 'mongodb';
 
-import { SQL_PASSWORD } from '../env/env.js';
+import { MONGO_URL } from '../env/env.js';
 
-export const sequelize = new Sequelize('nodeshop', 'root', SQL_PASSWORD, {
-  dialect: 'mysql',
-  host: 'localhost',
+const client = new MongoClient(MONGO_URL, {
+  // @ts-ignore
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
 });
+
+let db;
+
+export const mongoConnect = async () => {
+  try {
+    await client.connect();
+    console.log('Connected to MongoDB');
+    db = client.db();
+  } catch (err) {
+    console.log('Error connecting to MongoDB');
+    console.log(err);
+    throw err;
+  }
+};
+
+export const getDb = () => {
+  if (db) {
+    return db;
+  }
+  console.error('No database found');
+  return null;
+};

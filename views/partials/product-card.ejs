@@ -13,8 +13,12 @@
     <%= formatPrice(product.price) %>
   </h3>
 
-  <% if (pageTitle !== 'Orders') { %>
-  <a href="/products/<%= product.id %>" role="button">Details</a>
+  <p><%= product.description %></p>
+
+  <% if (pageTitle === 'Admin Products') { %>
+  <a href="/admin/edit-product/<%= product._id %>" role="button">Edit</a>
+  <% } else if (pageTitle !== product.name) { %>
+  <a href="/products/<%= product._id %>" role="button">Details</a>
   <% } %>
 
   <footer>
