@@ -3,15 +3,15 @@
 <%- include('../partials/navigation') %>
 
 <main>
-  <% if (orders.length) { %>
+  <% if (orders) { %>
 
   <h2>Orders</h2>
 
   <% orders.forEach((order) => { %>
 
-  <% order.products.forEach(product => { %>
+  <% order.items.forEach(item => { %>
 
-  <%- include('../partials/product-card.ejs', {product}) %>
+  <%- include('../partials/product-card.ejs', { order, product: item }) %>
 
   <% }) %>
 

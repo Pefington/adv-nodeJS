@@ -23,7 +23,7 @@ export const getCreateProduct = (_, res) => {
   });
 };
 
-export const postAddProduct = async (req, res) => {
+export const postCreateProduct = async (req, res) => {
   const { name, description, price } = req.body;
   try {
     const product = new Product(

@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "clear && nodemon app.js"
+    "dev": "clear && nodemon app.js -e js,ejs"
   },
   "devDependencies": {
     "eslint": "^8.36.0",

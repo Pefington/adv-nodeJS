@@ -1,14 +1,15 @@
 <article>
+  <% if (pageTitle === 'Orders') { %>
+  <h2><%= `Order ${ order._id }` %></h2>
+  <% } %>
 
   <h2><%= product.name %></h2>
 
   <img src=" <%= product.photoUrl %> " alt="<%= product.name %>" />
 
   <h3>
-    <% if (pageTitle === 'Cart') { %>
-    <%= `${product.cartItem.quantity} x ` %>
-    <% } else if (pageTitle === 'Orders') { %>
-    <%= `${product.orderItem.quantity} x ` %>
+    <% if (pageTitle === 'Cart' || pageTitle === 'Orders') { %>
+    <%= `${ product.quantity } x ` %>
     <% } %>
     <%= formatPrice(product.price) %>
   </h3>
@@ -23,13 +24,13 @@
 
   <footer>
     <% if (pageTitle === 'Admin Products') { %>
-    <%- include('../partials/form-delete-product.ejs', {product}) %>
+    <%- include('../partials/form-delete-product.ejs', { product }) %>
     <% } else if (pageTitle === 'Cart') { %>
-    <%- include('../partials/form-remove-from-cart.ejs', {product}) %>
+    <%- include('../partials/form-remove-from-cart.ejs', { product }) %>
     <% } else if (pageTitle === 'Orders') { %>
-    <%- include('../partials/form-checkout.ejs', {product}) %>
+    <%- include('../partials/form-checkout.ejs', { product }) %>
     <% } else { %>
-    <%- include('../partials/form-add-to-cart.ejs', {product}) %>
+    <%- include('../partials/form-add-to-cart.ejs', { product }) %>
     <% } %>
   </footer>
 

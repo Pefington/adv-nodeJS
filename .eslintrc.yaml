@@ -9,8 +9,8 @@ parserOptions:
   ecmaVersion: latest
   sourceType: module
 plugins:
-  - import
   - node
+  - import
   - simple-import-sort
 rules:
   import/extensions: off
@@ -20,6 +20,7 @@ rules:
   import/no-extraneous-dependencies: off
   import/prefer-default-export: off
   no-console: off
+  no-underscore-dangle: off
   no-unused-expressions:
     - error
     - allowShortCircuit: true

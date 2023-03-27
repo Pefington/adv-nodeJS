@@ -4,7 +4,7 @@
 
 <main>
 
-  <h2><%= edit ? `Edit ${product.name}` : 'Create Product' %></h2>
+  <h2><%= edit ? `Edit ${ product.name }` : 'Create Product' %></h2>
 
   <form action=<%= edit ? `/admin/edit-product` : '/admin/create-product' %> method="post">
     <label for="name">Product name</label>
@@ -21,7 +21,7 @@
 
     <label for="photoUrl">Photo URL</label>
     <input type="text" id="photoUrl" name="photoUrl" placeholder="Will search unsplash if left empty"
-      <%= edit && `value=${product.photoUrl}` %> onfocus="this.select()">
+      <%= edit && `value=${ product.photoUrl }` %> onfocus="this.select()">
 
     <% if (edit) { %><input type="hidden" name="id" value="<%= product._id %>"><% } %>
     <button type="submit"><%= edit ? 'Update product' : 'Create product' %></button>

@@ -14,12 +14,10 @@ let db;
 export const mongoConnect = async () => {
   try {
     await client.connect();
-    console.log('Connected to MongoDB');
-    db = client.db();
-  } catch (err) {
-    console.log('Error connecting to MongoDB');
-    console.log(err);
-    throw err;
+    db = client.db('shop');
+  } catch (error) {
+    console.error(`\n\n${error}\n`);
+    throw error;
   }
 };
 
