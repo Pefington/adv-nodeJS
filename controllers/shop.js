@@ -1,43 +1,47 @@
+import { ObjectId } from 'mongodb';
+
+import { Order } from '../models/order.js';
 import { Product } from '../models/product.js';
 import { formatPrice } from '../utils/formatPrice.js';
+import { logError } from '../utils/logError.js';
 
 export const getIndex = async (_, res) => {
   try {
-    const products = await Product.fetchAll();
+    const products = await Product.find();
     res.render('shop/index', {
       pageTitle: 'Shop',
       formatPrice,
       products,
     });
   } catch (error) {
-    console.error(`\n\n${error}\n`);
+    logError(error);
   }
 };
 
 export const getProducts = async (_, res) => {
   try {
-    const products = await Product.fetchAll();
+    const products = await Product.find();
     res.render('shop/products', {
       pageTitle: 'Products',
       formatPrice,
       products,
     });
   } catch (error) {
-    console.error(`\n\n${error}\n`);
+    logError(error);
   }
 };
 
 export const getProduct = async (req, res) => {
-  const { id: productId } = req.params;
   try {
-    const product = await Product.findById(productId);
+    const { id } = req.params;
+    const product = await Product.findById(id);
     res.render('shop/product', {
       pageTitle: product.name,
       formatPrice,
       product,
     });
   } catch (error) {
-    console.error(`\n\n${error}\n`);
+    logError(error);
     res.render('shop/product', {
       pageTitle: 'Product not found',
       formatPrice,
@@ -47,58 +51,63 @@ export const getProduct = async (req, res) => {
 };
 
 export const postCart = async (req, res) => {
-  const { productId } = req.body;
   try {
+    const { productId } = req.body;
     const product = await Product.findById(productId);
     await req.user.addToCart(product);
     res.redirect('/cart');
   } catch (error) {
-    console.error(`\n\n${error}\n`);
+    logError(error);
   }
 };
 
 export const getCart = async (req, res) => {
   try {
-    const products = await req.user.getCart();
+    const { user } = req;
+    const products = await user.getCart();
     res.render('shop/cart', {
       pageTitle: 'Cart',
       formatPrice,
       products,
     });
   } catch (error) {
-    console.error(`\n\n${error}\n`);
+    logError(error);
   }
 };
 
 export const postRemoveFromCart = async (req, res) => {
-  const { productId } = req.body;
   try {
+    const { productId } = req.body;
     await req.user.removeFromCart(productId);
-    res.redirect('/cart');
   } catch (error) {
-    console.error(`\n\n${error}\n`);
+    logError(error);
+  } finally {
+    res.redirect('/cart');
   }
 };
 
 export const postOrder = async (req, res) => {
   try {
-    await req.user.addOrder();
-    res.redirect('/orders');
+    const { user } = req;
+    await user.postOrder();
   } catch (error) {
-    console.error(`\n\n${error}\n`);
+    logError(error);
+  } finally {
+    res.redirect('/orders');
   }
 };
 
 export const getOrders = async (req, res) => {
   try {
-    const orders = await req.user.getOrders();
+    const { user } = req;
+    const orders = await user.getOrders();
     res.render('shop/orders', {
       pageTitle: 'Orders',
       formatPrice,
       orders,
     });
   } catch (error) {
-    console.error(`\n\n${error}\n`);
+    logError(error);
   }
 };
 

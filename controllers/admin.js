@@ -2,46 +2,49 @@ import { Product } from '../models/product.js';
 import { capitalise } from '../utils/capitalise.js';
 import { formatPrice } from '../utils/formatPrice.js';
 import { getphotoUrl } from '../utils/getPhotoUrl.js';
+import { logError } from '../utils/logError.js';
 
 export const getAdminProducts = async (_, res) => {
   try {
-    const products = await Product.fetchAll();
+    const products = await Product.find();
     res.render('admin/products', {
       pageTitle: 'Admin Products',
       formatPrice,
       products,
     });
   } catch (error) {
-    console.error(`\n\n${error}\n`);
+    logError(error);
   }
 };
 
-export const getCreateProduct = (_, res) => {
+export const getAddProduct = (_, res) => {
   res.render('admin/edit-product', {
-    pageTitle: 'Create Product',
+    pageTitle: 'Add Product',
     edit: false,
   });
 };
 
-export const postCreateProduct = async (req, res) => {
-  const { name, description, price } = req.body;
+export const postAddProduct = async (req, res) => {
   try {
-    const product = new Product(
-      capitalise(name),
-      capitalise(description),
-      price * 100
-    );
-    product.photoUrl = await getphotoUrl(name);
+    const { name, description, price, photoUrl } = req.body;
+    const product = new Product({
+      name: capitalise(name),
+      description: capitalise(description),
+      price: price * 100,
+      photoUrl: photoUrl || (await getphotoUrl(name)),
+      userId: req.user._id,
+    });
     await product.save();
   } catch (error) {
-    console.error(`\n\n${error}\n`);
+    logError(error);
+  } finally {
+    res.redirect('/');
   }
-  res.redirect('/');
 };
 
 export const getEditProduct = async (req, res) => {
-  const { id } = req.params;
   try {
+    const { id } = req.params;
     const product = await Product.findById(id);
     if (product) {
       res.render('admin/edit-product', {
@@ -53,34 +56,32 @@ export const getEditProduct = async (req, res) => {
       res.redirect('/');
     }
   } catch (error) {
-    console.error(`\n\n${error}\n`);
+    logError(error);
   }
 };
 
 export const postEditProduct = async (req, res) => {
-  const { name, description, price, photoUrl, id } = req.body;
   try {
-    const product = new Product(
-      capitalise(name),
-      capitalise(description),
-      price * 100,
-      photoUrl,
-      id
-    );
+    const { name, description, price, photoUrl, id } = req.body;
+    const product = await Product.findById(id);
+    product.name = capitalise(name);
+    product.description = capitalise(description);
+    product.price = price * 100;
     product.photoUrl = photoUrl || (await getphotoUrl(name));
     await product.save();
-    res.redirect('products');
   } catch (error) {
-    console.error(`\n\n${error}\n`);
+    logError(error);
+  } finally {
+    res.redirect('products');
   }
 };
 
 export const postDeleteProduct = async (req, res) => {
-  const { id } = req.body;
   try {
-    await Product.delete(id);
+    const { id } = req.body;
+    await Product.findByIdAndDelete(id);
     res.redirect('products');
   } catch (error) {
-    console.error(`\n\n${error}\n`);
+    logError(error);
   }
 };

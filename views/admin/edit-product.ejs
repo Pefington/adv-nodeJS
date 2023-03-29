@@ -4,9 +4,9 @@
 
 <main>
 
-  <h2><%= edit ? `Edit ${ product.name }` : 'Create Product' %></h2>
+  <h2><%= edit ? `Edit ${ product.name }` : 'Add Product' %></h2>
 
-  <form action=<%= edit ? `/admin/edit-product` : '/admin/create-product' %> method="post">
+  <form action=<%= edit ? `/admin/edit-product` : '/admin/add-product' %> method="post">
     <label for="name">Product name</label>
     <input type="text" id="name" name="name" placeholder="Product name" value="<%= edit ? product.name : 'cat' %>"
       autofocus required onfocus="this.select()">
@@ -23,8 +23,8 @@
     <input type="text" id="photoUrl" name="photoUrl" placeholder="Will search unsplash if left empty"
       <%= edit && `value=${ product.photoUrl }` %> onfocus="this.select()">
 
-    <% if (edit) { %><input type="hidden" name="id" value="<%= product._id %>"><% } %>
-    <button type="submit"><%= edit ? 'Update product' : 'Create product' %></button>
+    <% if (edit) { %><input type="hidden" name="productId" value="<%= product._id %>"><% } %>
+    <button type="submit"><%= edit ? 'Update product' : 'Add Product' %></button>
   </form>
 
 </main>
