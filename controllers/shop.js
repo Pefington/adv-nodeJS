@@ -1,6 +1,3 @@
-import { ObjectId } from 'mongodb';
-
-import { Order } from '../models/order.js';
 import { Product } from '../models/product.js';
 import { formatPrice } from '../utils/formatPrice.js';
 import { logError } from '../utils/logError.js';
