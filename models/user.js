@@ -101,4 +101,4 @@ userSchema.methods.getOrders = async function () {
   return Order.find({ 'user.id': this._id });
 };
 
-export default mongoose.model('User', userSchema);
+export const User = mongoose.model('User', userSchema);

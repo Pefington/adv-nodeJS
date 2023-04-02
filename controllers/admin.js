@@ -4,23 +4,25 @@ import { formatPrice } from '../utils/formatPrice.js';
 import { getphotoUrl } from '../utils/getPhotoUrl.js';
 import { logError } from '../utils/logError.js';
 
-export const getAdminProducts = async (_, res) => {
+export const getAdminProducts = async (req, res) => {
   try {
     const products = await Product.find();
     res.render('admin/products', {
       pageTitle: 'Admin Products',
       formatPrice,
       products,
+      isLoggedIn: req.session.isLoggedIn,
     });
   } catch (error) {
     logError(error);
   }
 };
 
-export const getAddProduct = (_, res) => {
+export const getAddProduct = (req, res) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     edit: false,
+    isLoggedIn: req.session.isLoggedIn,
   });
 };
 
@@ -44,13 +46,14 @@ export const postAddProduct = async (req, res) => {
 
 export const getEditProduct = async (req, res) => {
   try {
-    const { id } = req.params;
-    const product = await Product.findById(id);
+    const { productId } = req.params;
+    const product = await Product.findById(productId);
     if (product) {
       res.render('admin/edit-product', {
         pageTitle: 'Edit Product',
         edit: true,
         product,
+        isLoggedIn: req.session.isLoggedIn,
       });
     } else {
       res.redirect('/');
@@ -78,8 +81,8 @@ export const postEditProduct = async (req, res) => {
 
 export const postDeleteProduct = async (req, res) => {
   try {
-    const { id } = req.body;
-    await Product.findByIdAndDelete(id);
+    const { productId } = req.body;
+    await Product.findByIdAndDelete(productId);
     res.redirect('products');
   } catch (error) {
     logError(error);

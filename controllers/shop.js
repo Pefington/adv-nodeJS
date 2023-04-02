@@ -2,26 +2,28 @@ import { Product } from '../models/product.js';
 import { formatPrice } from '../utils/formatPrice.js';
 import { logError } from '../utils/logError.js';
 
-export const getIndex = async (_, res) => {
+export const getIndex = async (req, res) => {
   try {
     const products = await Product.find();
     res.render('shop/index', {
       pageTitle: 'Shop',
       formatPrice,
       products,
+      isLoggedIn: req.session.isLoggedIn,
     });
   } catch (error) {
     logError(error);
   }
 };
 
-export const getProducts = async (_, res) => {
+export const getProducts = async (req, res) => {
   try {
     const products = await Product.find();
     res.render('shop/products', {
       pageTitle: 'Products',
       formatPrice,
       products,
+      isLoggedIn: req.session.isLoggedIn,
     });
   } catch (error) {
     logError(error);
@@ -36,6 +38,7 @@ export const getProduct = async (req, res) => {
       pageTitle: product.name,
       formatPrice,
       product,
+      isLoggedIn: req.session.isLoggedIn,
     });
   } catch (error) {
     logError(error);
@@ -43,6 +46,7 @@ export const getProduct = async (req, res) => {
       pageTitle: 'Product not found',
       formatPrice,
       product: null,
+      isLoggedIn: req.session.isLoggedIn,
     });
   }
 };
@@ -66,6 +70,7 @@ export const getCart = async (req, res) => {
       pageTitle: 'Cart',
       formatPrice,
       products,
+      isLoggedIn: req.session.isLoggedIn,
     });
   } catch (error) {
     logError(error);
@@ -74,8 +79,8 @@ export const getCart = async (req, res) => {
 
 export const postRemoveFromCart = async (req, res) => {
   try {
-    const { productId } = req.body;
-    await req.user.removeFromCart(productId);
+    const { id } = req.body;
+    await req.user.removeFromCart(id);
   } catch (error) {
     logError(error);
   } finally {
@@ -102,14 +107,16 @@ export const getOrders = async (req, res) => {
       pageTitle: 'Orders',
       formatPrice,
       orders,
+      isLoggedIn: req.session.isLoggedIn,
     });
   } catch (error) {
     logError(error);
   }
 };
 
-export const getCheckout = (_, res) => {
+export const getCheckout = (req, res) => {
   // res.render('shop/checkout', {
   //   pageTitle: 'Checkout',
+  // isLoggedIn: req.session.isLoggedIn,
   // });
 };
