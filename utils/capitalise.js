@@ -1,5 +1,2 @@
-export function capitalise(str) {
-  const arr = str.split('');
-  arr.unshift(arr.shift().toUpperCase());
-  return arr.join('');
-}
+export const capitalise = (string) =>
+  `${string[0].toUpperCase()}${string.slice(1)}`;

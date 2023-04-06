@@ -4,7 +4,9 @@
 
 <main>
 
-  <h2><%= edit ? `Edit ${ product.name }` : 'Add Product' %></h2>
+  <h2>
+    <%= edit ? `Edit ${ product.name }` : 'Add Product' %>
+  </h2>
 
   <form action=<%= edit ? `/admin/edit-product` : '/admin/add-product' %> method="post">
     <label for="name">Product name</label>
@@ -12,8 +14,8 @@
       autofocus required onfocus="this.select()">
 
     <label for="description">Product description</label>
-    <textarea id="description" name="description" placeholder="Product description" rows="5" required
-      onfocus="this.select()"><%= edit ? product.description : 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quas quibusdam sequi eaque dolores ut, cupiditate aut doloribus deserunt qui quos voluptate ullam sapiente temporibus cumque a totam, esse delectus eos?' %></textarea>
+    <textarea id="description" name="description" placeholder="Will use photo alt if left empty" rows="5"
+      onfocus="this.select()"><%= edit ? product.description : null %></textarea>
 
     <label for="price">Product price</label>
     <input type="text" id="price" name="price" placeholder="€" value="<%= edit ? product.price / 100 : 1 %>" required
@@ -23,7 +25,11 @@
     <input type="text" id="photoUrl" name="photoUrl" placeholder="Will search unsplash if left empty"
       <%= edit && `value=${ product.photoUrl }` %> onfocus="this.select()">
 
-    <% if (edit) { %><input type="hidden" name="productId" value="<%= product._id %>"><% } %>
+    <% if (edit) { %>
+    <input type="hidden" name="productId" value="<%= product._id %>">
+    <% } %>
+
+    <input type="hidden" name="csrfToken" value="<%= csrfToken %>">
     <button type="submit"><%= edit ? 'Update product' : 'Add Product' %></button>
   </form>
 

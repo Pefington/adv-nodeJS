@@ -22,7 +22,7 @@
   <a href="/products/<%= product._id %>" role="button">Details</a>
   <% } %>
 
-  <% if (isLoggedIn) { %>
+  <% if (isSignedIn) { %>
   <footer>
     <% if (pageTitle === 'Admin Products') { %>
     <%- include('../partials/form-delete-product.ejs', { product }) %>

@@ -1,7 +1,7 @@
 import { Product } from '../models/product.js';
 import { capitalise } from '../utils/capitalise.js';
 import { formatPrice } from '../utils/formatPrice.js';
-import { getphotoUrl } from '../utils/getPhotoUrl.js';
+import { getPhoto } from '../utils/getPhoto.js';
 import { logError } from '../utils/logError.js';
 
 export const getAdminProducts = async (req, res) => {
@@ -11,7 +11,6 @@ export const getAdminProducts = async (req, res) => {
       pageTitle: 'Admin Products',
       formatPrice,
       products,
-      isLoggedIn: req.session.isLoggedIn,
     });
   } catch (error) {
     logError(error);
@@ -22,19 +21,19 @@ export const getAddProduct = (req, res) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     edit: false,
-    isLoggedIn: req.session.isLoggedIn,
   });
 };
 
 export const postAddProduct = async (req, res) => {
   try {
     const { name, description, price, photoUrl } = req.body;
+    const photo = await getPhoto(name);
     const product = new Product({
       name: capitalise(name),
-      description: capitalise(description),
+      description: capitalise(description || photo.alt),
       price: price * 100,
-      photoUrl: photoUrl || (await getphotoUrl(name)),
-      userId: req.user._id,
+      photoUrl: photoUrl || photo.url,
+      userId: req.session.user._id,
     });
     await product.save();
   } catch (error) {
@@ -53,7 +52,6 @@ export const getEditProduct = async (req, res) => {
         pageTitle: 'Edit Product',
         edit: true,
         product,
-        isLoggedIn: req.session.isLoggedIn,
       });
     } else {
       res.redirect('/');
@@ -65,12 +63,13 @@ export const getEditProduct = async (req, res) => {
 
 export const postEditProduct = async (req, res) => {
   try {
-    const { name, description, price, photoUrl, id } = req.body;
-    const product = await Product.findById(id);
+    const { name, description, price, photoUrl, productId } = req.body;
+    const product = await Product.findById(productId);
+    const photo = await getPhoto(name);
     product.name = capitalise(name);
-    product.description = capitalise(description);
+    product.description = capitalise(description || photo.alt);
     product.price = price * 100;
-    product.photoUrl = photoUrl || (await getphotoUrl(name));
+    product.photoUrl = photoUrl || photo.url;
     await product.save();
   } catch (error) {
     logError(error);

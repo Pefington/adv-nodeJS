@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable func-names */
 import mongoose from 'mongoose';
 
@@ -6,17 +7,17 @@ import { Order } from './order.js';
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-
   email: {
     type: String,
     required: true,
     trim: true,
     unique: true,
+  },
+
+  password: {
+    type: String,
+    required: true,
+    trim: true,
   },
 
   cart: {
@@ -37,7 +38,6 @@ const userSchema = new Schema({
 });
 
 userSchema.methods.addToCart = function (product) {
-  // @ts-ignore
   const updatedCartItems = [...this.cart.items];
   const index = updatedCartItems.findIndex(
     (item) => item.productId.toString() === product._id.toString()
@@ -54,7 +54,6 @@ userSchema.methods.addToCart = function (product) {
     items: updatedCartItems,
   };
   this.cart = updatedCart;
-  // @ts-ignore
   return this.save();
 };
 
@@ -77,7 +76,6 @@ userSchema.methods.getCart = async function () {
 
 userSchema.methods.clearCart = function () {
   this.cart = { items: [] };
-  // @ts-ignore
   return this.save();
 };
 
@@ -101,4 +99,4 @@ userSchema.methods.getOrders = async function () {
   return Order.find({ 'user.id': this._id });
 };
 
-export const User = mongoose.model('User', userSchema);
+export const User = mongoose.model( 'User', userSchema );

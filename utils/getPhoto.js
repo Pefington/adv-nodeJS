@@ -4,7 +4,7 @@ import { UNSPLASH_KEY } from '../env/env.js';
 
 const unsplash = createApi({ accessKey: UNSPLASH_KEY });
 
-export async function getphotoUrl(query) {
+export async function getPhoto(query) {
   try {
     const request = await unsplash.search.getPhotos({
       query,
@@ -15,8 +15,12 @@ export async function getphotoUrl(query) {
 
     const photos = request.response.results;
     const index = Math.floor(Math.random() * photos.length);
+    const photo = photos[index];
 
-    return photos[index].urls.small;
+    return {
+      url: photo.urls.small,
+      alt: photo.alt_description,
+    };
   } catch (error) {
     console.error('Unsplash error: ', error);
     return null;

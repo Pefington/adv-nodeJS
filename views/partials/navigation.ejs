@@ -14,7 +14,7 @@
           Products
         </a>
       </li>
-      <% if (isLoggedIn) { %>
+      <% if (isSignedIn) { %>
       <li>
         <a href="/cart" class="<%= pageTitle === 'Cart' && 'active' %>">
           Cart
@@ -38,13 +38,18 @@
       <% } %>
     </ul>
     <ul>
+      <% if (isSignedIn) { %>
       <li>
-        <% if (isLoggedIn) { %>
-        <a href="/logout">Log out</a>
-        <% } else { %>
-        <a href="/login" class="<%= pageTitle === 'Log in' && 'active' %>">Log in</a>
-        <% } %>
+        <a href="/signout">Sign out</a>
       </li>
+      <% } else { %>
+      <li>
+        <a href="/signup" class="<%= pageTitle === 'Sign up' && 'active' %>">Sign up</a>
+      </li>
+      <li>
+        <a href="/signin" class="<%= pageTitle === 'Sign in' && 'active' %>">Sign in</a>
+      </li>
+      <% } %>
     </ul>
   </nav>
 </header>

@@ -1,20 +1,25 @@
+// @ts-nocheck
 import bodyParser from 'body-parser';
 import connectMongoSession from 'connect-mongodb-session';
+import { csrfSync } from 'csrf-sync';
 import express from 'express';
 import session from 'express-session';
 import mongoose from 'mongoose';
 
 import { get404 } from './controllers/static.js';
 import { MONGO_URL } from './env/env.js';
+import { User } from './models/user.js';
 import { router as adminRoutes } from './routes/admin.js';
 import { router as authRoutes } from './routes/auth.js';
 import { router as shopRoutes } from './routes/shop.js';
 import { logError } from './utils/logError.js';
-import { User } from './models/user.js';
-
-const MongoDBStore = connectMongoSession(session);
 
 const app = express();
+
+const { csrfSynchronisedProtection } = csrfSync({
+  getTokenFromRequest: (req) => req.body.csrfToken,
+});
+const MongoDBStore = connectMongoSession(session);
 const mongoStore = new MongoDBStore({
   uri: MONGO_URL,
   collection: 'sessions',
@@ -33,12 +38,16 @@ app.use(
     store: mongoStore,
   })
 );
+app.use(async (req, _, next) => {
+  if (req.session.user) req.user = await User.findById(req.session.user._id);
+  next();
+});
 
-app.use( async ( req, _, next ) => {
-  // @ts-ignore
-  req.session.user || next();
-  // @ts-ignore
-  req.user = await User.findById(req.session.user._id);
+app.use(csrfSynchronisedProtection);
+
+app.use((req, res, next) => {
+  res.locals.isSignedIn = req.session.isSignedIn;
+  res.locals.csrfToken = req.csrfToken(true);
   next();
 });
 
@@ -50,14 +59,6 @@ app.use(get404);
 
 try {
   await mongoose.connect(MONGO_URL);
-  // const user = new User({
-  //   name: 'Jean-Micheng',
-  //   email: 'jm@test.com',
-  //   cart: {
-  //     items: [],
-  //   },
-  // });
-  // await user.save();
   app.listen(3000);
 } catch (error) {
   logError(error);

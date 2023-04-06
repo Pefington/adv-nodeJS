@@ -4,8 +4,10 @@ import * as auth from '../controllers/auth.js';
 
 export const router = express.Router();
 
-router.get('/login', auth.getLogin);
+router.get('/signup', auth.getSignup);
+router.post('/signup', auth.postSignup);
 
-router.post( '/login', auth.postLogin );
+router.get('/signin', auth.getSignin);
+router.post('/signin', auth.postSignin);
 
-router.get( '/logout', auth.postLogout );
+router.get('/signout', auth.postSignout);

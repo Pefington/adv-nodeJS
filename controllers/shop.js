@@ -9,7 +9,7 @@ export const getIndex = async (req, res) => {
       pageTitle: 'Shop',
       formatPrice,
       products,
-      isLoggedIn: req.session.isLoggedIn,
+      isSignedIn: req.session.isSignedIn,
     });
   } catch (error) {
     logError(error);
@@ -23,7 +23,7 @@ export const getProducts = async (req, res) => {
       pageTitle: 'Products',
       formatPrice,
       products,
-      isLoggedIn: req.session.isLoggedIn,
+      isSignedIn: req.session.isSignedIn,
     });
   } catch (error) {
     logError(error);
@@ -32,13 +32,13 @@ export const getProducts = async (req, res) => {
 
 export const getProduct = async (req, res) => {
   try {
-    const { id } = req.params;
-    const product = await Product.findById(id);
+    const { productId } = req.params;
+    const product = await Product.findById(productId);
     res.render('shop/product', {
       pageTitle: product.name,
       formatPrice,
       product,
-      isLoggedIn: req.session.isLoggedIn,
+      isSignedIn: req.session.isSignedIn,
     });
   } catch (error) {
     logError(error);
@@ -46,7 +46,7 @@ export const getProduct = async (req, res) => {
       pageTitle: 'Product not found',
       formatPrice,
       product: null,
-      isLoggedIn: req.session.isLoggedIn,
+      isSignedIn: req.session.isSignedIn,
     });
   }
 };
@@ -70,7 +70,6 @@ export const getCart = async (req, res) => {
       pageTitle: 'Cart',
       formatPrice,
       products,
-      isLoggedIn: req.session.isLoggedIn,
     });
   } catch (error) {
     logError(error);
@@ -79,8 +78,8 @@ export const getCart = async (req, res) => {
 
 export const postRemoveFromCart = async (req, res) => {
   try {
-    const { id } = req.body;
-    await req.user.removeFromCart(id);
+    const { productId } = req.body;
+    await req.user.removeFromCart(productId);
   } catch (error) {
     logError(error);
   } finally {
@@ -107,7 +106,7 @@ export const getOrders = async (req, res) => {
       pageTitle: 'Orders',
       formatPrice,
       orders,
-      isLoggedIn: req.session.isLoggedIn,
+      isSignedIn: req.session.isSignedIn,
     });
   } catch (error) {
     logError(error);
@@ -117,6 +116,5 @@ export const getOrders = async (req, res) => {
 export const getCheckout = (req, res) => {
   // res.render('shop/checkout', {
   //   pageTitle: 'Checkout',
-  // isLoggedIn: req.session.isLoggedIn,
   // });
 };
