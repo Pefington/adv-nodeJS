@@ -1,8 +1,7 @@
 // @ts-nocheck
 import bodyParser from 'body-parser';
 import connectMongoSession from 'connect-mongodb-session';
-import cookieParser from 'cookie-parser';
-import { doubleCsrf } from 'csrf-csrf';
+import { csrfSync } from 'csrf-sync';
 import express from 'express';
 import session from 'express-session';
 import mongoose from 'mongoose';
@@ -15,8 +14,7 @@ import { router as authRoutes } from './routes/auth.js';
 import { router as shopRoutes } from './routes/shop.js';
 import { logError } from './utils/logError.js';
 
-const { doubleCsrfProtection } = doubleCsrf({
-  getSecret: () => 'dummyCSRFHashSecret',
+const { csrfSynchronisedProtection } = csrfSync({
   getTokenFromRequest: (req) => req.body.csrfToken,
 });
 
@@ -46,8 +44,7 @@ app.use(async (req, _, next) => {
   next();
 });
 
-app.use(cookieParser());
-app.use(doubleCsrfProtection);
+app.use(csrfSynchronisedProtection);
 
 app.use((req, res, next) => {
   res.locals.isSignedIn = req.session.isSignedIn;
