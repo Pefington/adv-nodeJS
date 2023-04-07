@@ -85,7 +85,7 @@ userSchema.methods.postOrder = async function () {
 
   const order = new Order({
     user: {
-      name,
+      email: this.email,
       id,
     },
     products,
