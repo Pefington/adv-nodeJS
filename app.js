@@ -1,5 +1,6 @@
 // @ts-nocheck
 import bodyParser from 'body-parser';
+import flash from 'connect-flash';
 import connectMongoSession from 'connect-mongodb-session';
 import { csrfSync } from 'csrf-sync';
 import express from 'express';
@@ -45,6 +46,8 @@ app.use(async (req, _, next) => {
 });
 
 app.use(csrfSynchronisedProtection);
+
+app.use(flash({ locals: 'flashMessage' }));
 
 app.use((req, res, next) => {
   res.locals.isSignedIn = req.session.isSignedIn;

@@ -7,6 +7,9 @@ dependencies:
   body-parser:
     specifier: ^1.20.2
     version: 1.20.2
+  connect-flash:
+    specifier: ^0.1.1
+    version: 0.1.1
   connect-mongodb-session:
     specifier: ^3.1.1
     version: 3.1.1
@@ -1242,6 +1245,11 @@ packages:
   /confusing-browser-globals@1.0.11:
     resolution: {integrity: sha512-JsPKdmh8ZkmnHxDk55FZ1TqVLvEQTvoByJZRN9jzI0UjxK/QgAmsphz7PGtqgPieQZ/CQcHWXCR7ATDNhGe+YA==}
     dev: true
+
+  /connect-flash@0.1.1:
+    resolution: {integrity: sha512-2rcfELQt/ZMP+SM/pG8PyhJRaLKp+6Hk2IUBNkEit09X+vwn3QsAL3ZbYtxUn7NVPzbMTSLRDhqe0B/eh30RYA==}
+    engines: {node: '>= 0.4.0'}
+    dev: false
 
   /connect-mongodb-session@3.1.1:
     resolution: {integrity: sha512-HBfQW7lRLb64DopgxL4Pv8/iay4HcS1WU7YJfi7B8UbBPZGzVEHx67mx8xP5c2rWUMCQ4Xi/u4GUSC7e90Hhtw==}

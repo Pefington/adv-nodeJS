@@ -5,6 +5,8 @@
   --primary-inverse: #fff;
 }
 
+[x-cloak] { display: none !important; }
+
 .active {
   font-weight: 600;
   text-decoration: underline var(--primary-focus) 3px;

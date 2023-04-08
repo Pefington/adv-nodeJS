@@ -9,7 +9,6 @@ export const getIndex = async (req, res) => {
       pageTitle: 'Shop',
       formatPrice,
       products,
-      isSignedIn: req.session.isSignedIn,
     });
   } catch (error) {
     logError(error);
@@ -23,7 +22,6 @@ export const getProducts = async (req, res) => {
       pageTitle: 'Products',
       formatPrice,
       products,
-      isSignedIn: req.session.isSignedIn,
     });
   } catch (error) {
     logError(error);
@@ -38,7 +36,6 @@ export const getProduct = async (req, res) => {
       pageTitle: product.name,
       formatPrice,
       product,
-      isSignedIn: req.session.isSignedIn,
     });
   } catch (error) {
     logError(error);
@@ -46,7 +43,6 @@ export const getProduct = async (req, res) => {
       pageTitle: 'Product not found',
       formatPrice,
       product: null,
-      isSignedIn: req.session.isSignedIn,
     });
   }
 };
@@ -106,7 +102,6 @@ export const getOrders = async (req, res) => {
       pageTitle: 'Orders',
       formatPrice,
       orders,
-      isSignedIn: req.session.isSignedIn,
     });
   } catch (error) {
     logError(error);
