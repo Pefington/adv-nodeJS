@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "clear && nodemon app.js -e js,ejs"
+    "dev": "clear && nodemon -r dotenv/config app.js -e js,ejs"
   },
   "devDependencies": {
     "eslint": "^8.37.0",
@@ -22,12 +22,12 @@
     "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^3.1.1",
     "csrf-sync": "^4.0.1",
-    "dotenv": "^16.0.3",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "mongodb": "^5.2.0",
     "mongoose": "^7.0.3",
+    "sib-api-v3-sdk": "^8.5.0",
     "unsplash-js": "^7.0.15"
   }
 }

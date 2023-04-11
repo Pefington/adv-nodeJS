@@ -8,7 +8,6 @@ import session from 'express-session';
 import mongoose from 'mongoose';
 
 import { get404 } from './controllers/static.js';
-import { MONGO_URL } from './env/env.js';
 import { User } from './models/user.js';
 import { router as adminRoutes } from './routes/admin.js';
 import { router as authRoutes } from './routes/auth.js';
@@ -23,7 +22,7 @@ const app = express();
 
 const MongoDBStore = connectMongoSession(session);
 const mongoStore = new MongoDBStore({
-  uri: MONGO_URL,
+  uri: process.env.MONGO_URL,
   collection: 'sessions',
 });
 
@@ -62,7 +61,7 @@ app.use(shopRoutes);
 app.use(get404);
 
 try {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(process.env.MONGO_URL);
   app.listen(3000);
 } catch (error) {
   logError(error);

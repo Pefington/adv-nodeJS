@@ -1,8 +1,6 @@
 import { createApi } from 'unsplash-js';
 
-import { UNSPLASH_KEY } from '../env/env.js';
-
-const unsplash = createApi({ accessKey: UNSPLASH_KEY });
+const unsplash = createApi({ accessKey: process.env.UNSPLASH_KEY });
 
 export async function getPhoto(query) {
   try {
