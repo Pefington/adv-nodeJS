@@ -4,9 +4,11 @@ import { formatPrice } from '../utils/formatPrice.js';
 import { getPhoto } from '../utils/getPhoto.js';
 import { logError } from '../utils/logError.js';
 
-export const getAdminProducts = async (req, res) => {
+export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find({
+      userId: req.session.user._id,
+    });
     res.render('admin/products', {
       pageTitle: 'Admin Products',
       formatPrice,
@@ -17,7 +19,7 @@ export const getAdminProducts = async (req, res) => {
   }
 };
 
-export const getAddProduct = (req, res) => {
+export const getAddProduct = (_, res) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     edit: false,
@@ -65,6 +67,13 @@ export const postEditProduct = async (req, res) => {
   try {
     const { name, description, price, photoUrl, productId } = req.body;
     const product = await Product.findById(productId);
+
+    if (product.userId.toString() !== req.user._id.toString()) {
+      req.flash('message', '🕵️Look, no.');
+      res.redirect('/signout');
+      return;
+    }
+
     const photo = await getPhoto(name);
     product.name = capitalise(name);
     product.description = capitalise(description || photo.alt);
@@ -73,15 +82,21 @@ export const postEditProduct = async (req, res) => {
     await product.save();
   } catch (error) {
     logError(error);
-  } finally {
-    res.redirect('products');
+    res.redirect('/');
   }
 };
 
 export const postDeleteProduct = async (req, res) => {
   try {
     const { productId } = req.body;
-    await Product.findByIdAndDelete(productId);
+    const product = await Product.findById(productId);
+    if (product.userId.toString() !== req.user._id.toString()) {
+      req.flash('message', '🕵️Look, no.');
+      res.redirect('/signout');
+      return;
+    }
+    await product.deleteOne({ _id: productId });
+
     res.redirect('products');
   } catch (error) {
     logError(error);

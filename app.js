@@ -46,11 +46,12 @@ app.use(async (req, _, next) => {
 
 app.use(csrfSynchronisedProtection);
 
-app.use(flash({ locals: 'flashMessage' }));
+app.use(flash());
 
 app.use((req, res, next) => {
   res.locals.isSignedIn = req.session.isSignedIn;
   res.locals.csrfToken = req.csrfToken(true);
+  res.locals.flashMessage = req.flash('message');
   next();
 });
 

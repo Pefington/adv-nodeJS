@@ -5,7 +5,7 @@ import { authed } from '../middleware/authUtils.js';
 
 export const router = express.Router();
 
-router.get('/products', authed, admin.getAdminProducts);
+router.get('/products', authed, admin.getProducts);
 
 router.get('/add-product', authed, admin.getAddProduct);
 router.post('/add-product', authed, admin.postAddProduct);

@@ -15,7 +15,7 @@ export const getIndex = async (req, res) => {
   }
 };
 
-export const getProducts = async (req, res) => {
+export const getProducts = async (_, res) => {
   try {
     const products = await Product.find();
     res.render('shop/products', {
