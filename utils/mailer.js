@@ -1,6 +1,6 @@
 import sendInBlue from 'sib-api-v3-sdk';
 
-import { logError } from './logError.js';
+import { logError } from './error.js';
 
 sendInBlue.ApiClient.instance.authentications['api-key'].apiKey =
   process.env.SIB_KEY;
@@ -15,7 +15,7 @@ const sendEmail = async ({ email, subject, htmlContent }) => {
   //     to: [{ email }],
   //   });
   // } catch (error) {
-  //   logError(error);
+  //   next(new Error(error));
   // }
   logError('Reminder: Mailer is disabled.');
 };
@@ -30,7 +30,7 @@ export const sendWelcomeEmail = (email) => {
         <h1>Welcome to nodeshop!</h1>
         <p>The mailer works. ☺️</p>
       </body>
-    </html>`
+    </html>`,
   });
 };
 
@@ -44,11 +44,11 @@ export const sendResetPasswordEmail = async (email, token) => {
         <h1>Reset your password.</h1>
         <a href="http://localhost:3000/reset/${token}">Click here to reset your password.</a>
       </body>
-    </html>`
+    </html>`,
   });
 };
 
-export const sendNewPasswordEmail = ( email ) => {
+export const sendNewPasswordEmail = (email) => {
   sendEmail({
     email,
     subject: 'Your password has been reset.',
@@ -58,6 +58,6 @@ export const sendNewPasswordEmail = ( email ) => {
         <h1>Your password has been reset.</h1>
         <p>Your password has been reset successfully.</p>
       </body>
-    </html>`
+    </html>`,
   });
-}
+};

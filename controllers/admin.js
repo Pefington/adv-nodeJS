@@ -2,9 +2,8 @@ import { Product } from '../models/product.js';
 import { capitalise } from '../utils/capitalise.js';
 import { formatPrice } from '../utils/formatPrice.js';
 import { getPhoto } from '../utils/getPhoto.js';
-import { logError } from '../utils/logError.js';
 
-export const getProducts = async (req, res) => {
+export const getProducts = async (req, res, next) => {
   try {
     const products = await Product.find({
       userId: req.session.user._id,
@@ -15,18 +14,18 @@ export const getProducts = async (req, res) => {
       products,
     });
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   }
 };
 
-export const getAddProduct = (_, res) => {
+export const getAddProduct = (_, res, next) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     edit: false,
   });
 };
 
-export const postAddProduct = async (req, res) => {
+export const postAddProduct = async (req, res, next) => {
   try {
     const { name, description, price, photoUrl } = req.body;
     const photo = await getPhoto(name);
@@ -39,16 +38,16 @@ export const postAddProduct = async (req, res) => {
     });
     await product.save();
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   } finally {
     res.redirect('/');
   }
 };
 
-export const getEditProduct = async (req, res) => {
+export const getEditProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const product = await Product.findById( id );
+    const product = await Product.findById(id);
     if (product) {
       res.render('admin/edit-product', {
         pageTitle: 'Edit Product',
@@ -59,11 +58,11 @@ export const getEditProduct = async (req, res) => {
       res.redirect('/');
     }
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   }
 };
 
-export const postEditProduct = async (req, res) => {
+export const postEditProduct = async (req, res, next) => {
   try {
     const { name, description, price, photoUrl, productId } = req.body;
     const product = await Product.findById(productId);
@@ -81,12 +80,12 @@ export const postEditProduct = async (req, res) => {
     product.photoUrl = photoUrl || photo.url;
     await product.save();
   } catch (error) {
-    logError(error);
+    next(new Error(error));
     res.redirect('/');
   }
 };
 
-export const postDeleteProduct = async (req, res) => {
+export const postDeleteProduct = async (req, res, next) => {
   try {
     const { productId } = req.body;
     const product = await Product.findById(productId);
@@ -99,6 +98,6 @@ export const postDeleteProduct = async (req, res) => {
 
     res.redirect('products');
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   }
 };

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import bodyParser from 'body-parser';
 import flash from 'connect-flash';
 import connectMongoSession from 'connect-mongodb-session';
@@ -7,12 +6,12 @@ import express from 'express';
 import session from 'express-session';
 import mongoose from 'mongoose';
 
-import { get404 } from './controllers/static.js';
+import { get404, get500 } from './controllers/static.js';
 import { User } from './models/user.js';
 import { router as adminRoutes } from './routes/admin.js';
 import { router as authRoutes } from './routes/auth.js';
 import { router as shopRoutes } from './routes/shop.js';
-import { logError } from './utils/logError.js';
+import { logError } from './utils/error.js';
 
 const { csrfSynchronisedProtection } = csrfSync({
   getTokenFromRequest: (req) => req.body.csrfToken,
@@ -40,8 +39,13 @@ app.use(
   })
 );
 app.use(async (req, _, next) => {
-  if (req.session.user) req.user = await User.findById(req.session.user._id);
-  next();
+  try {
+    // @ts-ignore
+    if (req.session.user) req.user = await User.findById(req.session.user._id);
+    next();
+  } catch (error) {
+    throw new Error(error);
+  }
 });
 
 app.use(csrfSynchronisedProtection);
@@ -49,6 +53,7 @@ app.use(csrfSynchronisedProtection);
 app.use(flash());
 
 app.use((req, res, next) => {
+  // @ts-ignore
   res.locals.isSignedIn = req.session.isSignedIn;
   res.locals.csrfToken = req.csrfToken(true);
   res.locals.flashMessage = req.flash('message');
@@ -60,6 +65,7 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
 app.use(get404);
+app.use(get500);
 
 try {
   await mongoose.connect(process.env.MONGO_URL);

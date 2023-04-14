@@ -3,14 +3,14 @@ import crypto from 'crypto';
 import { validationResult } from 'express-validator';
 
 import { User } from '../models/user.js';
-import { logError } from '../utils/logError.js';
+import { logError } from '../utils/error.js';
 import {
   sendNewPasswordEmail,
   sendResetPasswordEmail,
   sendWelcomeEmail,
 } from '../utils/mailer.js';
 
-export const getSignup = async (_, res) => {
+export const getSignup = async (_, res, next) => {
   res.render('auth/signup', {
     pageTitle: 'Sign up',
     values: {
@@ -22,7 +22,7 @@ export const getSignup = async (_, res) => {
   });
 };
 
-export const postSignup = async (req, res) => {
+export const postSignup = async (req, res, next) => {
   const { email, password, confirmPassword } = req.body;
   const errors = validationResult(req);
 
@@ -55,11 +55,11 @@ export const postSignup = async (req, res) => {
     req.session.save();
     res.redirect('/');
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   }
 };
 
-export const getSignin = (_, res) => {
+export const getSignin = (_, res, next) => {
   res.render('auth/signin', {
     pageTitle: 'Sign in',
     values: {
@@ -69,7 +69,7 @@ export const getSignin = (_, res) => {
   });
 };
 
-export const postSignin = async (req, res) => {
+export const postSignin = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -91,25 +91,25 @@ export const postSignin = async (req, res) => {
       },
     });
   } catch (error) {
-    logError(error);
+    next(new Error(error));
     res.redirect('/signin');
   }
 };
 
-export const postSignout = (req, res) => {
+export const postSignout = (req, res, next) => {
   req.session.destroy((err) => {
     err && logError(err);
     res.redirect('/signin');
   });
 };
 
-export const getReset = (_, res) => {
+export const getReset = (_, res, next) => {
   res.render('auth/reset', {
     pageTitle: 'Reset Password',
   });
 };
 
-export const postReset = async (req, res) => {
+export const postReset = async (req, res, next) => {
   const { email } = req.body;
 
   try {
@@ -123,7 +123,7 @@ export const postReset = async (req, res) => {
     await user.save();
     await sendResetPasswordEmail(email, token);
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   } finally {
     req.flash(
       'message',
@@ -133,7 +133,7 @@ export const postReset = async (req, res) => {
   }
 };
 
-export const getNewPassword = async (req, res) => {
+export const getNewPassword = async (req, res, next) => {
   const { token } = req.params;
 
   try {
@@ -156,11 +156,11 @@ export const getNewPassword = async (req, res) => {
       userId: user._id.toString(),
     });
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   }
 };
 
-export const postNewPassword = async (req, res) => {
+export const postNewPassword = async (req, res, next) => {
   const { password, userId } = req.body;
 
   try {
@@ -178,7 +178,7 @@ export const postNewPassword = async (req, res) => {
     res.redirect('/');
   } catch (error) {
     req.flash('message', 'Something went wrong.');
-    logError(error);
+    next(new Error(error));
     res.redirect('/reset');
   }
 };

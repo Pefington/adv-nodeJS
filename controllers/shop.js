@@ -1,8 +1,7 @@
 import { Product } from '../models/product.js';
 import { formatPrice } from '../utils/formatPrice.js';
-import { logError } from '../utils/logError.js';
 
-export const getIndex = async (req, res) => {
+export const getIndex = async ( _, res, next ) => {
   try {
     const products = await Product.find();
     res.render('shop/index', {
@@ -11,11 +10,11 @@ export const getIndex = async (req, res) => {
       products,
     });
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   }
 };
 
-export const getProducts = async (_, res) => {
+export const getProducts = async (_, res, next) => {
   try {
     const products = await Product.find();
     res.render('shop/products', {
@@ -24,11 +23,11 @@ export const getProducts = async (_, res) => {
       products,
     });
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   }
 };
 
-export const getProduct = async (req, res) => {
+export const getProduct = async (req, res, next) => {
   try {
     const { productId } = req.params;
     const product = await Product.findById(productId);
@@ -38,7 +37,7 @@ export const getProduct = async (req, res) => {
       product,
     });
   } catch (error) {
-    logError(error);
+    next(new Error(error));
     res.render('shop/product', {
       pageTitle: 'Product not found',
       formatPrice,
@@ -47,18 +46,18 @@ export const getProduct = async (req, res) => {
   }
 };
 
-export const postCart = async (req, res) => {
+export const postCart = async (req, res, next) => {
   try {
     const { productId } = req.body;
     const product = await Product.findById(productId);
     await req.user.addToCart(product);
     res.redirect('/cart');
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   }
 };
 
-export const getCart = async (req, res) => {
+export const getCart = async (req, res, next) => {
   try {
     const { user } = req;
     const products = await user.getCart();
@@ -68,33 +67,33 @@ export const getCart = async (req, res) => {
       products,
     });
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   }
 };
 
-export const postRemoveFromCart = async (req, res) => {
+export const postRemoveFromCart = async (req, res, next) => {
   try {
     const { productId } = req.body;
     await req.user.removeFromCart(productId);
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   } finally {
     res.redirect('/cart');
   }
 };
 
-export const postOrder = async (req, res) => {
+export const postOrder = async (req, res, next) => {
   try {
     const { user } = req;
     await user.postOrder();
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   } finally {
     res.redirect('/orders');
   }
 };
 
-export const getOrders = async (req, res) => {
+export const getOrders = async (req, res, next) => {
   try {
     const { user } = req;
     const orders = await user.getOrders();
@@ -104,11 +103,11 @@ export const getOrders = async (req, res) => {
       orders,
     });
   } catch (error) {
-    logError(error);
+    next(new Error(error));
   }
 };
 
-export const getCheckout = (req, res) => {
+export const getCheckout = (req, res, next) => {
   // res.render('shop/checkout', {
   //   pageTitle: 'Checkout',
   // });
