@@ -47,8 +47,8 @@ export const postAddProduct = async (req, res) => {
 
 export const getEditProduct = async (req, res) => {
   try {
-    const { productId } = req.params;
-    const product = await Product.findById(productId);
+    const { id } = req.params;
+    const product = await Product.findById( id );
     if (product) {
       res.render('admin/edit-product', {
         pageTitle: 'Edit Product',

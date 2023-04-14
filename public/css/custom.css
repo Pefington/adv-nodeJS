@@ -5,7 +5,9 @@
   --primary-inverse: #fff;
 }
 
-[x-cloak] { display: none !important; }
+[x-cloak] {
+  display: none !important;
+}
 
 .active {
   font-weight: 600;
@@ -23,4 +25,8 @@ article > img {
 
 nav {
   padding-right: 2rem;
+}
+
+#flashClose {
+  cursor: pointer;
 }

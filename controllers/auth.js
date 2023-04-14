@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import { validationResult } from 'express-validator';
 
 import { User } from '../models/user.js';
 import { logError } from '../utils/logError.js';
@@ -9,15 +10,36 @@ import {
   sendWelcomeEmail,
 } from '../utils/mailer.js';
 
-export const getSignup = async (req, res) => {
+export const getSignup = async (_, res) => {
   res.render('auth/signup', {
     pageTitle: 'Sign up',
+    values: {
+      email: 'maabaa@yopmail.com',
+      password: '123456789012',
+      confirmPassword: '123456789012',
+    },
+    validationErrors: [],
   });
 };
 
 export const postSignup = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, confirmPassword } = req.body;
+  const errors = validationResult(req);
 
+  if (!errors.isEmpty()) {
+    res.status(422).render('auth/signup', {
+      pageTitle: 'Sign up',
+      flashMessage: errors.array()[0].msg,
+      values: {
+        email,
+        password,
+        confirmPassword,
+      },
+      validationErrors: errors.array(),
+    });
+    logError(errors.array().find((error) => error.param === 'email'));
+    return;
+  }
   try {
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = new User({
@@ -30,16 +52,20 @@ export const postSignup = async (req, res) => {
     await user.clearCart();
     req.session.user = user;
     req.session.isSignedIn = true;
+    req.session.save();
+    res.redirect('/');
   } catch (error) {
     logError(error);
-  } finally {
-    res.redirect('/');
   }
 };
 
-export const getSignin = (req, res) => {
+export const getSignin = (_, res) => {
   res.render('auth/signin', {
     pageTitle: 'Sign in',
+    values: {
+      email: 'maabaa@yopmail.com',
+      password: '123456789012',
+    },
   });
 };
 
@@ -50,14 +76,20 @@ export const postSignin = async (req, res) => {
     const match = user && (await bcrypt.compare(password, user.password));
     if (user && match) {
       req.session.user = user;
-      req.session.save();
       req.session.isSignedIn = true;
+      req.session.save();
       res.redirect('/');
       return;
     }
 
-    req.flash('message', 'Invalid email or password.');
-    res.redirect('/signin');
+    res.status(422).render('auth/signin', {
+      pageTitle: 'Sign in',
+      flashMessage: 'Invalid email or password.',
+      values: {
+        email,
+        password,
+      },
+    });
   } catch (error) {
     logError(error);
     res.redirect('/signin');
@@ -67,11 +99,11 @@ export const postSignin = async (req, res) => {
 export const postSignout = (req, res) => {
   req.session.destroy((err) => {
     err && logError(err);
-    res.redirect('/');
+    res.redirect('/signin');
   });
 };
 
-export const getReset = (req, res) => {
+export const getReset = (_, res) => {
   res.render('auth/reset', {
     pageTitle: 'Reset Password',
   });

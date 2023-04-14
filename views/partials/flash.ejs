@@ -1,5 +1,6 @@
-<a href x-data="{ flashMessage: '<%= flashMessage %>' }" aria-label="Close" class="close" @click="flashMessage = false">
-  <dialog open x-cloak x-show="flashMessage" x-transition:leave.duration.1000ms @click="flashMessage = false">
+<div id="flashClose" x-data="{ flashMessage: '<%= flashMessage %>' }">
+  <dialog open aria-label="Close" class="close" x-cloak x-show="flashMessage" x-transition.opacity
+    x-transition.duration.500ms @click="flashMessage = false">
     <h3><%= `${flashMessage}` %></h3>
   </dialog>
-</a>
+</div>

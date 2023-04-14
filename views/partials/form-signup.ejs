@@ -1,10 +1,27 @@
-<form action="/signup" method="post">
-  <label for="email">Email</label>
-  <input type="email" id="email" name="email" value="maabaa@yopmail.com">
-  <label for="password">Password</label>
-  <input type="password" id="password" name="password" value="123456">
-  <label for="confirm-password">Confirm Password</label>
-  <input type="password" id="confirmPassword" name="confirmPassword" value="123456">
+<form
+  x-data="{ fields: { email: '<%= values.email %>', password: '<%= values.password %>', confirmPassword: '<%= values.confirmPassword %>' }}"
+  action="/signup" method="post" novalidate>
+
+  <label for="email"
+    x-text="fields.email.trim().length > 6 && !/^[^@]+@[^@]+\.[^@]+$/.test(fields.email.trim()) ? 'Please enter a valid email.' : 'Email'"></label>
+  <input x-model="fields.email" x-on:input.debounce.500ms="fields.email = $event.target.value" :aria-invalid="
+    fields.email.trim().length > 6 ? !/^[^@]+@[^@]+\.[^@]+$/.test(fields.email.trim()) ? 'true' : 'false' : ''" type="email"
+    id="email" name="email">
+
+  <label for="password"
+    x-text="fields.password.trim().length > 6 && fields.password.trim().length < 12 ? 'Password should be at least 12 characters long.' : 'Password'"></label>
+  <input x-model="fields.password" x-on:input.debounce.500ms="fields.password = $event.target.value" :aria-invalid="
+    fields.password.trim().length > 6 ? fields.password.trim().length < 12 ? 'true' : 'false' : ''" type="password" id="password"
+    name="password">
+
+  <label for="confirm-password"
+    x-text="fields.confirmPassword.trim().length > 6 && fields.confirmPassword.trim() !== fields.password.trim() ? 'Password and confirmation do not match.' : 'Confirm Password'"></label>
+  <input x-model="fields.confirmPassword" x-on:input.debounce.500ms="fields.confirmPassword = $event.target.value"
+    :aria-invalid="
+    fields.password.length > 6 ? fields.confirmPassword.trim() !== fields.password.trim() ? 'true' : 'false' : ''" type="password"
+    id="confirmPassword" name="confirmPassword">
+
   <input type="hidden" name="csrfToken" value="<%= csrfToken %>">
   <button type="submit">Sign up</button>
+
 </form>
