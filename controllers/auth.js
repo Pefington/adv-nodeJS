@@ -36,6 +36,7 @@ export const postSignup = async (req, res, next) => {
       },
       validationErrors: errors.array(),
     });
+    // @ts-ignore
     console.error(errors.array().find((error) => error.param === 'email'));
     return;
   }

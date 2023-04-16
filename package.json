@@ -29,6 +29,8 @@
     "mongodb": "^5.2.0",
     "mongoose": "^7.0.3",
     "multer": "1.4.5-lts.1",
+    "nodemailer": "^6.9.1",
+    "nodemailer-sendinblue-transport": "^2.0.1",
     "unsplash-js": "^7.0.15"
   }
 }

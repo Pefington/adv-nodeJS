@@ -37,6 +37,12 @@ dependencies:
   multer:
     specifier: 1.4.5-lts.1
     version: 1.4.5-lts.1
+  nodemailer:
+    specifier: ^6.9.1
+    version: 6.9.1
+  nodemailer-sendinblue-transport:
+    specifier: ^2.0.1
+    version: 2.0.1
   unsplash-js:
     specifier: ^7.0.15
     version: 7.0.15
@@ -2497,6 +2503,15 @@ packages:
   /negotiator@0.6.3:
     resolution: {integrity: sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==}
     engines: {node: '>= 0.6'}
+    dev: false
+
+  /nodemailer-sendinblue-transport@2.0.1:
+    resolution: {integrity: sha512-AtkLImrKkiks8ukP5JKd98U9mkumlg054deLrJ8O2KMVr9tcxcAybrZjNHhc4PfPl36SQkLtxXKOti0jJCHPgg==}
+    dev: false
+
+  /nodemailer@6.9.1:
+    resolution: {integrity: sha512-qHw7dOiU5UKNnQpXktdgQ1d3OFgRAekuvbJLcdG5dnEo/GtcTHRYM7+UfJARdOFU9WUQO8OiIamgWPmiSFHYAA==}
+    engines: {node: '>=6.0.0'}
     dev: false
 
   /nodemon@2.0.22:

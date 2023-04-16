@@ -1,28 +1,33 @@
-// import sendInBlue from 'sib-api-v3-sdk';
+import nodemailer from 'nodemailer';
+import Transport from 'nodemailer-sendinblue-transport';
 
-// sendInBlue.ApiClient.instance.authentications['api-key'].apiKey =
-//   process.env.SIB_KEY;
+const transporter = nodemailer.createTransport(
+  new Transport({
+    apiKey: process.env.SIB_KEY,
+  })
+);
 
-const sendEmail = async ({ email, subject, htmlContent }) => {
-  // try {
-  //   const emailApi = new sendInBlue.TransactionalEmailsApi();
-  //   await emailApi.sendTransacEmail({
-  //     sender: { email: 'maabaa@gmail.com', name: 'nodeshop' },
-  //     subject,
-  //     htmlContent,
-  //     to: [{ email }],
-  //   });
-  // } catch (error) {
-  //   next(new Error(error));
-  // }
-  console.error('Reminder: Mailer is disabled.');
+const sendEmail = async ({ email, subject, text, html }) => {
+  try {
+    await transporter.sendMail({
+      from: '"nodeshop" <maabaa@gmail.com>',
+      to: email,
+      subject,
+      text,
+      html,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  // console.error('Reminder: Mailer is disabled.');
 };
 
 export const sendWelcomeEmail = (email) => {
   sendEmail({
     email,
     subject: 'Signup successful.',
-    htmlContent: `<!DOCTYPE html>
+    text: 'Welcome to nodeshop!',
+    html: `<!DOCTYPE html>
     <html>
       <body>
         <h1>Welcome to nodeshop!</h1>
@@ -36,7 +41,8 @@ export const sendResetPasswordEmail = async (email, token) => {
   sendEmail({
     email,
     subject: 'Reset your password.',
-    htmlContent: `<!DOCTYPE html>
+    text: `Reset your password by going to: http://localhost:3000/reset/${token}`,
+    html: `<!DOCTYPE html>
     <html>
       <body>
         <h1>Reset your password.</h1>
@@ -50,7 +56,8 @@ export const sendNewPasswordEmail = (email) => {
   sendEmail({
     email,
     subject: 'Your password has been reset.',
-    htmlContent: `<!DOCTYPE html>
+    text: 'Your password has been reset successfully.',
+    html: `<!DOCTYPE html>
     <html>
       <body>
         <h1>Your password has been reset.</h1>
