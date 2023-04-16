@@ -28,7 +28,7 @@ const productSchema = new Schema({
     ref: 'User',
     required: true,
   },
-  
+
 });
 
 export const Product = mongoose.model('Product', productSchema);

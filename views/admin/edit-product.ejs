@@ -8,7 +8,7 @@
     <%= edit ? `Edit ${ product.name }` : 'Add Product' %>
   </h2>
 
-  <form action=<%= edit ? `/admin/edit-product` : '/admin/add-product' %> method="post">
+  <form action=<%= edit ? `/admin/edit-product` : '/admin/add-product' %> method="post" enctype="multipart/form-data">
     <label for="name">Product name</label>
     <input type="text" id="name" name="name" placeholder="Product name" value="<%= edit ? product.name : 'cat' %>"
       autofocus required onfocus="this.select()">
@@ -21,9 +21,20 @@
     <input type="text" id="price" name="price" placeholder="€" value="<%= edit ? product.price / 100 : 1 %>" required
       onfocus="this.select()"></input>
 
-    <label for="photoUrl">Photo URL</label>
-    <input type="text" id="photoUrl" name="photoUrl" placeholder="Will search unsplash if left empty"
-      <%= edit && `value=${ product.photoUrl }` %> onfocus="this.select()">
+    <div class="grid">
+      <div>
+        <label for="photoUrl">Photo URL
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>or</em></label>
+        <input type="text" id="photoUrl" name="photoUrl" placeholder="Will search unsplash if left empty"
+          <%= edit && `value=${ product.photoUrl }` %> onfocus="this.select()">
+      </div>
+
+      <div>
+        <label for="photoFile">Select File</label>
+        <input type="file" id="photoFile" name="photoFile" placeholder="Will search unsplash if left empty"
+          onfocus="this.select()">
+      </div>
+    </div>
 
     <% if (edit) { %>
     <input type="hidden" name="productId" value="<%= product._id %>">

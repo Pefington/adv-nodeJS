@@ -1,9 +1,7 @@
-import sendInBlue from 'sib-api-v3-sdk';
+// import sendInBlue from 'sib-api-v3-sdk';
 
-import { logError } from './error.js';
-
-sendInBlue.ApiClient.instance.authentications['api-key'].apiKey =
-  process.env.SIB_KEY;
+// sendInBlue.ApiClient.instance.authentications['api-key'].apiKey =
+//   process.env.SIB_KEY;
 
 const sendEmail = async ({ email, subject, htmlContent }) => {
   // try {
@@ -17,7 +15,7 @@ const sendEmail = async ({ email, subject, htmlContent }) => {
   // } catch (error) {
   //   next(new Error(error));
   // }
-  logError('Reminder: Mailer is disabled.');
+  console.error('Reminder: Mailer is disabled.');
 };
 
 export const sendWelcomeEmail = (email) => {

@@ -3,7 +3,6 @@ import crypto from 'crypto';
 import { validationResult } from 'express-validator';
 
 import { User } from '../models/user.js';
-import { logError } from '../utils/error.js';
 import {
   sendNewPasswordEmail,
   sendResetPasswordEmail,
@@ -37,7 +36,7 @@ export const postSignup = async (req, res, next) => {
       },
       validationErrors: errors.array(),
     });
-    logError(errors.array().find((error) => error.param === 'email'));
+    console.error(errors.array().find((error) => error.param === 'email'));
     return;
   }
   try {
@@ -98,7 +97,7 @@ export const postSignin = async (req, res, next) => {
 
 export const postSignout = (req, res, next) => {
   req.session.destroy((err) => {
-    err && logError(err);
+    err && console.error(err);
     res.redirect('/signin');
   });
 };

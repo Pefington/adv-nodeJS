@@ -1,3 +1,5 @@
+import fs from 'fs/promises';
+
 import { Product } from '../models/product.js';
 import { capitalise } from '../utils/capitalise.js';
 import { formatPrice } from '../utils/formatPrice.js';
@@ -25,23 +27,23 @@ export const getAddProduct = (_, res, next) => {
   });
 };
 
-export const postAddProduct = async (req, res, next) => {
-  try {
-    const { name, description, price, photoUrl } = req.body;
-    const photo = await getPhoto(name);
-    const product = new Product({
-      name: capitalise(name),
-      description: capitalise(description || photo.alt),
-      price: price * 100,
-      photoUrl: photoUrl || photo.url,
-      userId: req.session.user._id,
-    });
-    await product.save();
-  } catch (error) {
-    next(new Error(error));
-  } finally {
-    res.redirect('/');
-  }
+export const postAddProduct = async (req, res, _) => {
+  const { name, description, price, photoUrl } = req.body;
+  const photoFile = req.file;
+  const photo = await getPhoto(name);
+  const product = new Product({
+    name: capitalise(name),
+    description: capitalise(description || photo.alt),
+    price: price * 100,
+    photoUrl:
+      // eslint-disable-next-line no-useless-escape
+      (photoFile && `\/${photoFile?.path.split('/').slice(1).join('/')}`) ||
+      photoUrl ||
+      photo.url,
+    userId: req.session.user._id,
+  });
+  await product.save();
+  res.redirect('products');
 };
 
 export const getEditProduct = async (req, res, next) => {
@@ -65,6 +67,7 @@ export const getEditProduct = async (req, res, next) => {
 export const postEditProduct = async (req, res, next) => {
   try {
     const { name, description, price, photoUrl, productId } = req.body;
+    const photoFile = req.file;
     const product = await Product.findById(productId);
 
     if (product.userId.toString() !== req.user._id.toString()) {
@@ -77,11 +80,19 @@ export const postEditProduct = async (req, res, next) => {
     product.name = capitalise(name);
     product.description = capitalise(description || photo.alt);
     product.price = price * 100;
-    product.photoUrl = photoUrl || photo.url;
+    product.photoUrl = `${photoFile?.path}` || photoUrl || photo.url;
     await product.save();
   } catch (error) {
     next(new Error(error));
     res.redirect('/');
+    // res.status(422).render('admin/edit-product', {
+    //   pageTitle: 'Add Product',
+    //   path: '/admin/add-product',
+    //   editing: false,
+    //   hasError: true,
+    //   message: 'Attached file is not an image.',
+    //   validationErrors: [],
+    // });
   }
 };
 
@@ -89,11 +100,14 @@ export const postDeleteProduct = async (req, res, next) => {
   try {
     const { productId } = req.body;
     const product = await Product.findById(productId);
-    if (product.userId.toString() !== req.user._id.toString()) {
+    if (!product || product.userId.toString() !== req.user._id.toString()) {
       req.flash('message', '🕵️Look, no.');
       res.redirect('/signout');
       return;
     }
+    if (product?.photoUrl.split('/').includes('photos'))
+      await fs.unlink( `data/${product.photoUrl}` );
+
     await product.deleteOne({ _id: productId });
 
     res.redirect('products');

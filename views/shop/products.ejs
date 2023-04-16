@@ -3,6 +3,7 @@
 <%- include('../partials/navigation') %>
 
 <main>
+
   <% if (products.length) { %>
 
   <h2>All products</h2>
@@ -11,13 +12,12 @@
 
   <%- include('../partials/product-card', { product }) %>
 
-  <% }) %>
-
-  <% } else { %>
+  <% })} else { %>
 
   <h2>No product found.</h2>
 
   <% } %>
+
 </main>
 
 <%- include('../partials/end') %>
