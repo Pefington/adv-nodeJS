@@ -30,3 +30,13 @@ nav {
 #flashClose {
   cursor: pointer;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination > h3 > a {
+  margin: 0 1rem;
+}

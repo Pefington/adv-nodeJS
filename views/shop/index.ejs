@@ -3,6 +3,7 @@
 <%- include('../partials/navigation') %>
 
 <main>
+
   <% if (products.length) { %>
 
   <h2>All products</h2>
@@ -13,11 +14,21 @@
 
   <% }) %>
 
+  <section class="pagination">
+    <% if (hasPreviousPage) { %>
+    <h3><a href="?page=<%= previousPage %>">&lt;</a></h3>
+    <% } %>
+    <% if (hasNextPage) { %>
+    <h3><a href="?page=<%= nextPage %>">&gt;</a></h3>
+    <% } %>
+  </section>
+
   <% } else { %>
 
   <h2>No product found.</h2>
 
   <% } %>
+
 </main>
 
 <%- include('../partials/end') %>

@@ -84,7 +84,7 @@ userSchema.methods.clearCart = function () {
 
 userSchema.methods.postOrder = async function () {
   const products = await this.getCart();
-  const { _id: id, name } = this;
+  const { _id: id } = this;
 
   const order = new Order({
     user: {
@@ -98,8 +98,14 @@ userSchema.methods.postOrder = async function () {
   await this.clearCart();
 };
 
-userSchema.methods.getOrders = async function () {
-  return Order.find({ 'user.id': this._id });
+userSchema.methods.getOrder = async function (orderId) {
+  const order = await Order.findById(orderId);
+  return order;
 };
 
-export const User = mongoose.model( 'User', userSchema );
+userSchema.methods.getOrders = async function () {
+  const orders = await Order.find({ 'user.id': this._id });
+  return orders;
+};
+
+export const User = mongoose.model('User', userSchema);

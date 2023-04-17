@@ -1,6 +1,6 @@
 <article>
   <% if (pageTitle === 'Orders') { %>
-  <h2><%= `Order ${ order._id }` %></h2>
+  <h2>Order <a href="/invoice/<%= order._id %>"><%= order._id %></a></h2>
   <% } %>
 
   <h2><%= product.name %></h2>

@@ -1,13 +1,38 @@
+import fs from 'fs';
+import path, { dirname } from 'path';
+import PDFDocument from 'pdfkit';
+import { fileURLToPath } from 'url';
+
 import { Product } from '../models/product.js';
 import { formatPrice } from '../utils/formatPrice.js';
 
-export const getIndex = async ( _, res, next ) => {
+const ITEMS_PER_PAGE = 4;
+
+export const getIndex = async (req, res, next) => {
   try {
-    const products = await Product.find();
+    const { page } = req.query;
+
+    const totalItems = await Product.find().countDocuments();
+    const totalPages = Math.ceil( totalItems / ITEMS_PER_PAGE );
+    const currentPage = page ? +page : 1;
+    const hasPreviousPage = currentPage > 1;
+    const hasNextPage = currentPage < totalPages;
+    const previousPage = currentPage - 1;
+    const nextPage = currentPage + 1;
+
+    const products = await Product.find()
+      .skip((page - 1) * ITEMS_PER_PAGE)
+      .limit(ITEMS_PER_PAGE);
     res.render('shop/index', {
       pageTitle: 'Shop',
       formatPrice,
       products,
+      totalItems,
+      currentPage,
+      hasNextPage,
+      hasPreviousPage,
+      nextPage,
+      previousPage,
     });
   } catch (error) {
     next(new Error(error));
@@ -104,6 +129,62 @@ export const getOrders = async (req, res, next) => {
     });
   } catch (error) {
     next(new Error(error));
+  }
+};
+
+export const getInvoice = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { user } = req;
+
+    try {
+      const order = await user.getOrder(id);
+      if (!order || order.user.id.toString() !== user.id.toString()) {
+        req.flash('error', '🕵️Look, no.');
+        res.status(401).redirect('shop/orders');
+      }
+    } catch (error) {
+      return next(new Error('🕵️Look, no.'));
+    }
+
+    const order = await user.getOrder(id);
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const invoicePath = path.resolve(
+      __dirname,
+      `../data/invoices/invoice-${id}.pdf`
+    );
+
+    const invoice = new PDFDocument();
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader(
+      'Content-Disposition',
+      `inline; filename="invoice-${id}.pdf"`
+    );
+    invoice.pipe(fs.createWriteStream(invoicePath));
+    invoice.pipe(res);
+
+    invoice.fontSize(26).text('Invoice', {
+      underline: true,
+    });
+    invoice.text('----------------');
+    let totalPrice = 0;
+    order.products.forEach((product) => {
+      totalPrice += product.price * product.quantity;
+      invoice
+        .fontSize(14)
+        .text(
+          `${product.name} - ${product.quantity} x ${formatPrice(
+            product.price
+          )}`
+        );
+    });
+    invoice.text('----------------');
+    invoice.fontSize(20).text(`Total Price: ${formatPrice(totalPrice)}`);
+    return invoice.end();
+  } catch (error) {
+    return next(new Error(error));
   }
 };
 
