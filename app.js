@@ -14,7 +14,7 @@ import { router as authRoutes } from './routes/auth.js';
 import { router as shopRoutes } from './routes/shop.js';
 
 const { csrfSynchronisedProtection } = csrfSync({
-  getTokenFromRequest: (req) => req.body.csrfToken,
+  getTokenFromRequest: (req) => req.body.csrfToken ?? req.headers.csrftoken, // headers are lowercase
 });
 
 const app = express();
@@ -47,12 +47,12 @@ const fileFilter = (_, file, cb) => {
   }
 };
 
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({ storage, fileFilter }).single('photoFile'));
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(express.static('data'));
 app.use(
@@ -80,7 +80,7 @@ app.use(flash());
 app.use((req, res, next) => {
   // @ts-ignore
   res.locals.isSignedIn = req.session.isSignedIn;
-  res.locals.csrfToken = req.csrfToken(true);
+  res.locals.csrfToken = req.csrfToken();
   res.locals.flashMessage = req.flash('message');
   next();
 });

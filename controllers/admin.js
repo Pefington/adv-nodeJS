@@ -96,22 +96,23 @@ export const postEditProduct = async (req, res, next) => {
   }
 };
 
-export const postDeleteProduct = async (req, res, next) => {
+export const deleteProduct = async (req, res, next) => {
   try {
-    const { productId } = req.body;
-    const product = await Product.findById(productId);
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
     if (!product || product.userId.toString() !== req.user._id.toString()) {
       req.flash('message', '🕵️Look, no.');
       res.redirect('/signout');
       return;
     }
     if (product?.photoUrl.split('/').includes('photos'))
-      await fs.unlink( `data/${product.photoUrl}` );
+      await fs.unlink(`data/${product.photoUrl}`);
 
-    await product.deleteOne({ _id: productId });
+    await product.deleteOne({ _id: id });
 
-    res.redirect('products');
+    res.status(200).json({ message: 'Success' });
   } catch (error) {
-    next(new Error(error));
+    res.status(500).json({ message: 'Deleting product failed' });
   }
 };
