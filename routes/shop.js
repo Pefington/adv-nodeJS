@@ -15,9 +15,12 @@ router.post('/cart', authed, shop.postCart);
 
 router.post('/delete-from-cart', authed, shop.postRemoveFromCart);
 
-router.get('/checkout', authed, shop.getCheckout);
+router.get( '/checkout', authed, shop.getCheckout );
+router.post( '/checkout', authed, shop.postCheckout )
+router.get( '/checkout-success', authed, shop.getCheckoutSuccess );
+router.get( '/checkout-cancel', authed, shop.getCheckoutCancel);
 
-router.get( '/orders', authed, shop.getOrders );
+router.get('/orders', authed, shop.getOrders);
 
 router.get('/invoice/:id', authed, shop.getInvoice);
 

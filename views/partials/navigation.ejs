@@ -16,11 +16,6 @@
       </li>
       <% if (isSignedIn) { %>
       <li>
-        <a href="/cart" class="<%= pageTitle === 'Cart' && 'active' %>">
-          Cart
-        </a>
-      </li>
-      <li>
         <a href="/orders" class="<%= pageTitle === 'Orders' && 'active' %>">
           Orders
         </a>
@@ -37,6 +32,15 @@
       </li>
       <% } %>
     </ul>
+    <% if (isSignedIn) { %>
+    <ul>
+      <li>
+        <a href="/cart" class="cart-icon <%= pageTitle === 'Cart' && 'active' %>">
+          🛒
+        </a>
+      </li>
+    </ul>
+    <% } %>
     <ul>
       <% if (isSignedIn) { %>
       <li>

@@ -1,0 +1,29 @@
+<%- include('../partials/head') %>
+
+<%- include('../partials/navigation') %>
+
+<main>
+
+
+    <h2>Checkout</h2>
+    <h3>Total due: <%= formatPrice(total) %></h3>
+
+
+  <article class="grid">
+
+    <% products.forEach(product => { %>
+    <div>
+      <h3><%= product.name %></h3>
+      <p><%= product.description %></p>
+      <p><%= `${product.quantity} x ${formatPrice(product.price)}:` %></p>
+      <h4><%= `${formatPrice(product.price * product.quantity)}` %></h4>
+    </div>
+    <% }) %>
+
+  </article>
+
+<%- include('../partials/form-checkout.ejs') %>
+
+</main>
+
+<%- include('../partials/end') %>

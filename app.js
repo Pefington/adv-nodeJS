@@ -83,7 +83,7 @@ app.use((req, res, next) => {
   res.locals.csrfToken = req.csrfToken();
   res.locals.flashMessage = req.flash('message');
   next();
-});
+} );
 
 app.use(authRoutes);
 app.use('/admin', adminRoutes);

@@ -40,3 +40,12 @@ nav {
 .pagination > h3 > a {
   margin: 0 1rem;
 }
+
+.cart-icon {
+  color: transparent;
+  text-shadow: 0 0 0 var(--primary);
+}
+
+.cart-icon:hover {
+  text-shadow: 0 0 0 var(--primary-hover);
+}

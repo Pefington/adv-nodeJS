@@ -22,14 +22,12 @@
   <a href="/products/<%= product._id %>" role="button">Details</a>
   <% } %>
 
-  <% if (isSignedIn) { %>
+  <% if (isSignedIn && pageTitle !== 'Orders') { %>
   <footer>
     <% if (pageTitle === 'Admin Products') { %>
     <%- include('../partials/form-delete-product.ejs', { product }) %>
     <% } else if (pageTitle === 'Cart') { %>
     <%- include('../partials/form-remove-from-cart.ejs', { product }) %>
-    <% } else if (pageTitle === 'Orders') { %>
-    <%- include('../partials/form-checkout.ejs', { product }) %>
     <% } else { %>
     <%- include('../partials/form-add-to-cart.ejs', { product }) %>
     <% } %>

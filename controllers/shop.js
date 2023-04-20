@@ -1,10 +1,15 @@
+/* eslint-disable camelcase */
 import fs from 'fs';
 import path, { dirname } from 'path';
 import PDFDocument from 'pdfkit';
+import Stripe from 'stripe';
 import { fileURLToPath } from 'url';
 
 import { Product } from '../models/product.js';
 import { formatPrice } from '../utils/formatPrice.js';
+
+// @ts-ignore
+const stripe = new Stripe(process.env.STRIPE_KEY);
 
 const ITEMS_PER_PAGE = 4;
 
@@ -13,7 +18,7 @@ export const getIndex = async (req, res, next) => {
     const { page } = req.query;
 
     const totalItems = await Product.find().countDocuments();
-    const totalPages = Math.ceil( totalItems / ITEMS_PER_PAGE );
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
     const currentPage = page ? +page : 1;
     const hasPreviousPage = currentPage > 1;
     const hasNextPage = currentPage < totalPages;
@@ -76,7 +81,7 @@ export const postCart = async (req, res, next) => {
     const { productId } = req.body;
     const product = await Product.findById(productId);
     await req.user.addToCart(product);
-    res.redirect('/cart');
+    res.redirect('/');
   } catch (error) {
     next(new Error(error));
   }
@@ -105,6 +110,70 @@ export const postRemoveFromCart = async (req, res, next) => {
   } finally {
     res.redirect('/cart');
   }
+};
+
+export const getCheckout = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const products = await user.getCart();
+    const total = products.reduce(
+      (acc, product) => acc + product.price * product.quantity,
+      0
+    );
+    res.render('shop/checkout', {
+      pageTitle: 'Checkout',
+      formatPrice,
+      products,
+      total,
+    });
+  } catch (error) {
+    next(new Error(error));
+  }
+};
+
+export const postCheckout = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const products = await user.getCart();
+
+    const line_items = products.map((product) => ({
+      price_data: {
+        currency: 'eur',
+        product_data: {
+          name: product.name,
+          description: product.description,
+        },
+        unit_amount: product.price,
+      },
+      quantity: product.quantity,
+    }));
+
+    const session = await stripe.checkout.sessions.create({
+      line_items,
+      mode: 'payment',
+      success_url: `${req.protocol}://${req.get('host')}/checkout-success`,
+      cancel_url: `${req.protocol}://${req.get('host')}/checkout-cancel`,
+    });
+
+    res.redirect(303, session.url);
+  } catch (error) {
+    next(new Error(error));
+  }
+};
+
+export const getCheckoutSuccess = async (req, res, next) => {
+  const { user } = req;
+  await user.clearCart();
+
+  res.render('shop/checkout-success', {
+    pageTitle: 'Checkout Success',
+  });
+};
+
+export const getCheckoutCancel = (req, res, next) => {
+  res.render('shop/checkout-cancel', {
+    pageTitle: 'Checkout Canceled',
+  });
 };
 
 export const postOrder = async (req, res, next) => {
@@ -186,10 +255,4 @@ export const getInvoice = async (req, res, next) => {
   } catch (error) {
     return next(new Error(error));
   }
-};
-
-export const getCheckout = (req, res, next) => {
-  // res.render('shop/checkout', {
-  //   pageTitle: 'Checkout',
-  // });
 };
